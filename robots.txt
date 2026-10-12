@@ -1,4 +1,3 @@
 User-agent: *
 Allow: /
-
-Sitemap: https://corbinstriples.com/sitemap.xml
+Sitemap: https://gibbstouchdowns.com/sitemap.xml

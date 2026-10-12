@@ -5,7 +5,7 @@ import { readFileSync, readdirSync } from 'node:fs';
 import { webSignup, normalizeUSPhone } from '../src/signup.js';
 import twilio from 'twilio';
 import { incoming, handleRequest, recordEvents, dispatch, poll } from '../src/worker.js';
-import { tripleEvents } from '../src/triples.js';
+import { touchdownEvents } from '../src/touchdowns.js';
 
 function setup() {
   const sqlite = new DatabaseSync(':memory:');
@@ -43,9 +43,9 @@ async function join(env, now = Date.now() - 1000, number = phone) {
   pending(env, now - 1000, number);
   await incoming(env, message('YES', { From: number }), now);
 }
-const fixture = JSON.parse(readFileSync(new URL('./triple.fixture.json', import.meta.url)));
-const occurred = Date.parse(fixture.liveData.plays.allPlays[0].about.endTime);
-const event = { id: 'game:1', occurredAt: Date.now(), body: 'Corbin Triples: HE HIT ONE. Reply STOP to quit.' };
+const fixture = JSON.parse(readFileSync(new URL('./touchdown.fixture.json', import.meta.url)));
+const occurred = Date.parse(fixture.drives.previous.flatMap(d => d.plays).find(p => p.id === '4018729911237').wallclock);
+const event = { id: 'game:1', occurredAt: Date.now(), body: 'Gibbs TD Chase: HE HIT ONE. Reply STOP to quit.' };
 
 function signedRequest(env, params, path = '/sms') {
   const url = env.PUBLIC_URL + path;
@@ -56,27 +56,34 @@ function signedRequest(env, params, path = '/sms') {
   }, body: new URLSearchParams(params) });
 }
 
-test('real MLB triple: identifies batter, game and inning; skips old and incomplete plays', () => {
-  const events = tripleEvents(fixture, occurred - 1000, occurred + 1000);
+test('real ESPN touchdown: identifies scorer and occurrence time; skips old plays', () => {
+  const events = touchdownEvents(fixture, occurred - 1000, occurred + 1000);
   assert.equal(events.length, 1);
-  assert.equal(events[0].id, '778429:0');
-  assert.match(events[0].body, /Nationals, inning 1/);
-  assert.ok(events[0].body.length <= 160);
-  assert.deepEqual(tripleEvents(fixture, occurred, occurred + 1000), []);
-  assert.deepEqual(tripleEvents(fixture, 0, occurred + 7 * 60 * 60 * 1000), []);
-  for (const mutation of [p => p.result.eventType = 'double', p => p.matchup.batter.id = 1, p => p.about.isComplete = false]) {
-    const copy = structuredClone(fixture); mutation(copy.liveData.plays.allPlays[0]);
-    assert.deepEqual(tripleEvents(copy, 0, occurred + 1000), []);
+  assert.equal(events[0].id, '401872991:4018729911237');
+  assert.match(events[0].body, /ARI, Q2/);
+  assert.deepEqual(touchdownEvents(fixture, occurred, occurred + 1000), []);
+  assert.deepEqual(touchdownEvents(fixture, 0, occurred + 10 * 60 * 60 * 1000), []);
+  for (const mutate of [p => p.team.id = '22', p => p.text = 'David Montgomery 1 Yd Run', p => p.scoringType.name = 'two-point-conversion']) {
+    const copy = structuredClone(fixture); mutate(copy.scoringPlays.find(p => p.id === '4018729911237'));
+    assert.deepEqual(touchdownEvents(copy, 0, occurred + 1000), []);
   }
 });
 
-test('two triples in one game remain distinct; postseason is excluded', () => {
-  const copy = structuredClone(fixture);
-  const play = structuredClone(copy.liveData.plays.allPlays[0]); play.about.atBatIndex = 20;
-  copy.liveData.plays.allPlays.push(play);
-  assert.equal(new Set(tripleEvents(copy, 0, occurred + 1000).map(e => e.id)).size, 2);
-  copy.gameData.game.type = 'P';
-  assert.deepEqual(tripleEvents(copy, 0, occurred + 1000), []);
+test('two touchdowns remain distinct; postseason, wrong season, and missing wallclock excluded', () => {
+  const end = Date.parse('2026-10-11T23:08:00Z');
+  assert.equal(new Set(touchdownEvents(fixture, 0, end).map(e => e.id)).size, 2);
+  for (const mutate of [s => s.header.season.type = 3, s => s.header.season.year = 2025, s => s.drives = {}]) {
+    const copy = structuredClone(fixture); mutate(copy);
+    assert.deepEqual(touchdownEvents(copy, 0, end), []);
+  }
+});
+
+test('receiving scorer is counted; Gibbs as passer or two-point scorer is excluded', () => {
+  for (const [text, expected] of [['Jahmyr Gibbs 8 Yd pass from Jared Goff', 1], ['J.Goff pass short left to J.Gibbs for 8 yards, TOUCHDOWN.', 1], ['J.Gibbs pass to Sam LaPorta for 8 yards, TOUCHDOWN.', 0], ['J.Gibbs for 1 yard, TOUCHDOWN. NO PLAY', 0]]) {
+    const copy = structuredClone(fixture);
+    copy.scoringPlays.find(p => p.id === '4018729911237').text = text;
+    assert.equal(touchdownEvents(copy, 0, occurred + 1000).length, expected);
+  }
 });
 
 test('subscription requires YES, expires after 15 minutes, and rejects non-US signups', async () => {
@@ -161,15 +168,15 @@ test('disabled polling makes no network calls', async t => {
   await poll(env);
 });
 
-test('full scheduled poll checks MLB, records a real play, sends once, and tolerates a later feed outage', async t => {
+test('full scheduled poll checks ESPN, records a real touchdown, sends once, and tolerates a later feed outage', async t => {
   const env = setup(); env.ALERTS_ENABLED = 'true'; env.ALERTS_START_AT = new Date(occurred - 5000).toISOString();
   await join(env, occurred - 1000);
   let sent = 0; let outage = false;
   t.mock.method(console, 'error', () => {});
   t.mock.method(globalThis, 'fetch', async url => {
     if (url.includes('twilio.com')) { sent++; return Response.json({ sid: 'SM' + 'd'.repeat(32) }); }
-    if (outage) throw new Error('MLB unavailable');
-    if (url.includes('/schedule?')) return Response.json({ dates: [{ games: [{ gamePk: fixture.gamePk, gameType: 'R', status: { abstractGameState: 'Live' } }] }] });
+    if (outage) throw new Error('ESPN unavailable');
+    if (url.includes('/schedule?')) return Response.json({ season: { year: 2026, type: 2 }, events: [{ id: fixture.header.id, date: '2026-10-11T20:25Z', season: { year: 2026 }, seasonType: { type: 2 }, competitions: [{ status: { type: { state: 'in' } } }] }] });
     return Response.json(fixture);
   });
   await poll(env, occurred + 1000); await poll(env, occurred + 2000);
@@ -197,7 +204,7 @@ test('out-of-order callbacks do not regress delivered or sent messages', async t
 });
 
 function webEnv() {
-  return { ...setup(), SITE_ORIGIN: 'https://corbinstriples.com', SIGNUPS_ENABLED: 'true', TURNSTILE_SECRET_KEY: 'test-key', MAX_WEB_SIGNUPS_PER_DAY: '100' };
+  return { ...setup(), SITE_ORIGIN: 'https://gibbs.example.com', SIGNUPS_ENABLED: 'true', TURNSTILE_SECRET_KEY: 'test-key', MAX_WEB_SIGNUPS_PER_DAY: '100' };
 }
 function signupRequest(env, data = {}, origin = env.SITE_ORIGIN) {
   return new Request(env.PUBLIC_URL + '/subscribe', { method: 'POST', headers: {
@@ -209,7 +216,7 @@ function mockSignup(t, challenge = {}) {
   t.mock.method(globalThis, 'fetch', async (url, options) => {
     if (url.includes('siteverify')) {
       calls.verifications++;
-      return Response.json({ success: true, hostname: 'corbinstriples.com', action: 'sms-signup', ...challenge });
+      return Response.json({ success: true, hostname: 'gibbs.example.com', action: 'sms-signup', ...challenge });
     }
     assert.ok(url.startsWith('https://api.twilio.com/'));
     calls.texts++;
@@ -263,7 +270,7 @@ test('repeated form submissions do not resend immediately or exceed the per-numb
   assert.equal(calls.texts, 1);
 });
 
-test('global form daily limit blocks additional SMS, independently of triple-alert allowance', async t => {
+test('global form daily limit blocks additional SMS, independently of touchdown-alert allowance', async t => {
   const env = webEnv(); env.MAX_WEB_SIGNUPS_PER_DAY = '1'; const calls = mockSignup(t);
   assert.equal((await webSignup(signupRequest(env), env)).status, 202);
   assert.equal((await webSignup(signupRequest(env, { phone: '+12025550124' }), env)).status, 503);
@@ -281,7 +288,7 @@ test('web signup never reverses a STOP or resends to an active subscriber', asyn
 test('uncertain provider response is reported honestly and not immediately retried', async t => {
   const env = webEnv(); let sends = 0;
   t.mock.method(globalThis, 'fetch', async url => {
-    if (url.includes('siteverify')) return Response.json({ success: true, hostname: 'corbinstriples.com', action: 'sms-signup' });
+    if (url.includes('siteverify')) return Response.json({ success: true, hostname: 'gibbs.example.com', action: 'sms-signup' });
     sends++; throw new Error('timeout');
   });
   assert.equal((await webSignup(signupRequest(env), env)).status, 502);
@@ -308,7 +315,7 @@ test('prelaunch saves consent without Twilio credentials or active enrollment', 
   assert.match((await response.json()).message, /No text has been sent/);
   const saved = env.sqlite.prepare('SELECT * FROM signup_waitlist').get();
   assert.equal(saved.phone, phone); assert.equal(saved.created_at, now);
-  assert.equal(saved.terms_version, '2026-09-15'); assert.equal(saved.consent_source, 'web');
+  assert.equal(saved.terms_version, '2026-10-12'); assert.equal(saved.consent_source, 'web');
   assert.equal(row(env), undefined);
   await incoming(env, message('YES'), now + 1000);
   assert.equal(row(env), undefined);
@@ -358,4 +365,17 @@ test('keyword signup is disabled and replies do not advertise it', async () => {
     assert.match(reply, /test@example.com/);
     assert.doesNotMatch(reply, /Text TRIPLES/i);
   }
+});
+
+test('public stats API is available before configuring a subscriber database', async t => {
+  t.mock.method(globalThis, 'fetch', async () => Response.json({ splits: { categories: [] } }));
+  const response = await handleRequest(new Request('https://stats.example.com/api/nfl/season'), {});
+  assert.equal(response.status, 200);
+  assert.equal(response.headers.get('Access-Control-Allow-Origin'), '*');
+});
+
+test('stats-only scheduled deployment needs no database and cannot send SMS', async t => {
+  t.mock.method(globalThis, 'fetch', () => assert.fail('must not contact providers'));
+  await poll({ ALERTS_ENABLED: 'false' });
+  await assert.rejects(() => poll({ ALERTS_ENABLED: 'true' }), /database/);
 });

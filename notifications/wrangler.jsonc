@@ -1,27 +1,27 @@
 {
   "$schema": "node_modules/wrangler/config-schema.json",
-  "name": "corbin-triple-alerts",
+  "compatibility_date": "2026-10-12",
+  "compatibility_flags": [
+    "nodejs_compat"
+  ],
   "main": "src/worker.js",
-  "compatibility_date": "2026-09-14",
-  "compatibility_flags": ["nodejs_compat"],
-  "triggers": { "crons": ["* * * * *"] },
+  "name": "gibbs-td-alerts",
+  "triggers": {
+    "crons": [
+      "*/2 * * * *"
+    ]
+  },
   "vars": {
     "ALERTS_ENABLED": "false",
+    "ALERTS_START_AT": "",
+    "MAX_ALERTS_PER_MONTH": "1000",
+    "MAX_SUBSCRIBERS": "100",
+    "MAX_WEB_SIGNUPS_PER_DAY": "100",
+    "PUBLIC_URL": "",
     "SIGNUPS_ENABLED": "false",
     "SIGNUP_MODE": "waitlist",
-    "SITE_ORIGIN": "https://corbinstriples.com",
-    "MAX_WEB_SIGNUPS_PER_DAY": "100",
-    "ALERTS_START_AT": "",
-    "PUBLIC_URL": "",
-    "TWILIO_PHONE_NUMBER": "+15207770150",
+    "SITE_ORIGIN": "https://gibbstouchdowns.com",
     "SUPPORT_EMAIL": "ssh.b.designs@gmail.com",
-    "MAX_SUBSCRIBERS": "100",
-    "MAX_ALERTS_PER_MONTH": "1000"
-  },
-  "d1_databases": [{
-    "binding": "DB",
-    "database_name": "corbin-triple-alerts",
-    "database_id": "REPLACE_WITH_D1_DATABASE_ID",
-    "migrations_dir": "migrations"
-  }]
+    "TWILIO_PHONE_NUMBER": ""
+  }
 }

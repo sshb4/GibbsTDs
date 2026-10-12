@@ -1,0 +1,9 @@
+{
+  "name": "gibbs-td-chase",
+  "private": true,
+  "type": "module",
+  "scripts": {
+    "test": "node --test test/*.test.mjs && npm --prefix notifications test",
+    "dev": "node scripts/dev-server.mjs"
+  }
+}

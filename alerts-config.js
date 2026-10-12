@@ -1,8 +1,8 @@
-// Public display settings only. Never put Twilio credentials in this file.
-// The number enables the signup link; backend activation is configured separately.
-window.CORBIN_ALERTS = {
-  phoneNumber: '+15207770150',
+// Connect only after the Gibbs Worker and Turnstile widget are configured.
+// Public settings only; keep credentials in Worker secrets.
+window.GIBBS_ALERTS = {
+  phoneNumber: '',
   supportEmail: 'ssh.b.designs@gmail.com',
-  apiBaseUrl: 'https://corbin-triple-alerts.sashacbates.workers.dev',
-  turnstileSiteKey: '0x4AAAAAAE03ujPJq5ww2YSZ'
+  apiBaseUrl: '',
+  turnstileSiteKey: ''
 };

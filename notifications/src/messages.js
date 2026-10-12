@@ -1,2 +1,2 @@
-export const TERMS_VERSION = '2026-09-15';
-export const SIGNUP_PROMPT = 'Corbin Triples: Reply YES to get automated triple alerts. Frequency varies. Msg & data rates may apply. STOP to quit. Terms: corbinstriples.com/sms-terms/';
+export const TERMS_VERSION = '2026-10-12';
+export const SIGNUP_PROMPT = 'Gibbs TD Chase: Reply YES to get automated touchdown alerts. Frequency varies. Msg & data rates may apply. STOP to quit. Terms: {terms}';

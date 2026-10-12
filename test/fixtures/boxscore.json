@@ -1,0 +1,160 @@
+{
+  "header": {
+    "season": {
+      "year": 2026,
+      "current": true,
+      "type": 2
+    }
+  },
+  "boxscore": {
+    "players": [
+      {
+        "team": {
+          "id": "8"
+        },
+        "statistics": [
+          {
+            "name": "passing",
+            "labels": [
+              "C/ATT",
+              "YDS",
+              "AVG",
+              "TD",
+              "INT",
+              "SACKS",
+              "QBR",
+              "RTG"
+            ],
+            "athletes": []
+          },
+          {
+            "name": "rushing",
+            "labels": [
+              "CAR",
+              "YDS",
+              "AVG",
+              "TD",
+              "LONG"
+            ],
+            "athletes": [
+              {
+                "athlete": {
+                  "id": "4429795"
+                },
+                "stats": [
+                  "25",
+                  "151",
+                  "6.0",
+                  "2",
+                  "22"
+                ]
+              }
+            ]
+          },
+          {
+            "name": "receiving",
+            "labels": [
+              "REC",
+              "YDS",
+              "AVG",
+              "TD",
+              "LONG",
+              "TGTS"
+            ],
+            "athletes": [
+              {
+                "athlete": {
+                  "id": "4429795"
+                },
+                "stats": [
+                  "5",
+                  "56",
+                  "11.2",
+                  "0",
+                  "23",
+                  "6"
+                ]
+              }
+            ]
+          },
+          {
+            "name": "fumbles",
+            "labels": [
+              "FUM",
+              "LOST",
+              "REC"
+            ],
+            "athletes": []
+          },
+          {
+            "name": "defensive",
+            "labels": [
+              "TOT",
+              "SOLO",
+              "SACKS",
+              "TFL",
+              "PD",
+              "QB HTS",
+              "TD"
+            ],
+            "athletes": []
+          },
+          {
+            "name": "interceptions",
+            "labels": [
+              "INT",
+              "YDS",
+              "TD"
+            ],
+            "athletes": []
+          },
+          {
+            "name": "kickReturns",
+            "labels": [
+              "NO",
+              "YDS",
+              "AVG",
+              "LONG",
+              "TD"
+            ],
+            "athletes": []
+          },
+          {
+            "name": "puntReturns",
+            "labels": [
+              "NO",
+              "YDS",
+              "AVG",
+              "LONG",
+              "TD"
+            ],
+            "athletes": []
+          },
+          {
+            "name": "kicking",
+            "labels": [
+              "FG",
+              "PCT",
+              "LONG",
+              "XP",
+              "PTS"
+            ],
+            "athletes": []
+          },
+          {
+            "name": "punting",
+            "labels": [
+              "NO",
+              "YDS",
+              "AVG",
+              "TB",
+              "In 20",
+              "LONG"
+            ],
+            "athletes": []
+          }
+        ]
+      }
+    ]
+  }
+}

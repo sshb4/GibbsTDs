@@ -1,222 +1,104 @@
 <!doctype html>
 <html lang="en">
-  <head>
-    <meta charset="utf-8" />
-    <meta name="viewport" content="width=device-width, initial-scale=1" />
-    <title>Corbin Carroll Triples | Season &amp; Career Stats</title>
-    <meta
-      name="description"
-      content="Track Corbin Carroll's triples with current-season and career totals, his most recent triples, year-by-year stats, and MLB leaderboards."
-    />
-    <link rel="canonical" href="https://corbinstriples.com/" />
-    <meta property="og:type" content="website" />
-    <meta property="og:site_name" content="Corbin Triples" />
-    <meta property="og:title" content="Corbin Carroll Triples | Season &amp; Career Stats" />
-    <meta property="og:description" content="Track Corbin Carroll's triples: season and career totals, recent triples, year-by-year stats, and MLB leaderboards." />
-    <meta property="og:url" content="https://corbinstriples.com/" />
-    <script type="application/ld+json">
-      {
-        "@context": "https://schema.org",
-        "@graph": [
-          {
-            "@type": "WebSite",
-            "@id": "https://corbinstriples.com/#website",
-            "url": "https://corbinstriples.com/",
-            "name": "Corbin Triples",
-            "alternateName": "Corbin Carroll's Triples",
-            "inLanguage": "en"
-          },
-          {
-            "@type": "WebPage",
-            "@id": "https://corbinstriples.com/#webpage",
-            "url": "https://corbinstriples.com/",
-            "name": "Corbin Carroll Triples | Season & Career Stats",
-            "description": "Current-season and career triples, recent triples, year-by-year stats, and MLB leaderboards for Corbin Carroll.",
-            "isPartOf": { "@id": "https://corbinstriples.com/#website" },
-            "about": { "@type": "Person", "name": "Corbin Carroll" },
-            "inLanguage": "en"
-          }
-        ]
-      }
-    </script>
-    <link rel="icon" type="image/svg+xml" href="favicon.svg?v=3" />
-    <link rel="preconnect" href="https://fonts.googleapis.com" />
-    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
-    <link
-      href="https://fonts.googleapis.com/css2?family=Bebas+Neue&display=swap"
-      rel="stylesheet"
-    />
-    <link rel="stylesheet" href="styles.css" />
-  </head>
-  <!-- Google tag (gtag.js) -->
-<script async src="https://www.googletagmanager.com/gtag/js?id=G-S9QST2PH1W"></script>
-<script src="analytics.js"></script>
-  <body>
-    <div class="season-banner">See you next year</div>
-    <div class="wrap">
-      <main class="grid" id="triples-stats">
-        <section class="panel hero" aria-label="Current season triples">
-          <div class="hero-status">
-            <span id="status">Loading...</span>
-            <button
-              id="refresh-button"
-              class="hero-refresh"
-              type="button"
-              aria-label="Refresh MLB data"
-              title="Refresh MLB data"
-            >&#8635;</button>
-          </div>
-          <div class="hero-visual">
-            <div class="triple-hero">
-              <div class="triple-kicker" id="season-label">TRIPLES IN 2026</div>
-
-            <div class="kinetic-number" id="kinetic-number" aria-label="0 triples in 2026">
+<head>
+  <meta charset="utf-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1" />
+  <title>Gibbs TD Chase | Chasing 31</title>
+  <meta name="description" content="Follow Jahmyr Gibbs' 2026 chase of the NFL single-season touchdown record. Live totals, 17-game pace, game log, and touchdown leaderboard." />
+  <link rel="canonical" href="https://gibbstouchdowns.com/" />
+  <meta property="og:url" content="https://gibbstouchdowns.com/" />
+  <meta property="og:type" content="website" />
+  <meta property="og:site_name" content="Gibbs TD Chase" />
+  <meta property="og:title" content="Gibbs TD Chase | Chasing 31" />
+  <meta property="og:description" content="One player. One record. Follow Jahmyr Gibbs' chase of 31 touchdowns." />
+  <link rel="icon" type="image/svg+xml" href="favicon.svg" />
+  <link rel="preconnect" href="https://fonts.googleapis.com" />
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+  <link href="https://fonts.googleapis.com/css2?family=Bebas+Neue&display=swap" rel="stylesheet" />
+  <link rel="stylesheet" href="styles.css" />
+</head>
+<body>
+  <div class="season-banner">Detroit, meet history. <span>2026 regular season</span></div>
+  <div class="wrap">
+    <header class="site-header"><a href="./" class="brand">GIBBS<span>TD CHASE</span></a><a href="#sms-alerts">He scores. You get a text. ↗</a></header>
+    <main class="grid" id="td-stats">
+      <section class="panel hero" aria-labelledby="hero-heading">
+        <div class="hero-status"><span id="status" role="status">Loading ESPN data…</span><button id="refresh-button" class="hero-refresh" type="button" aria-label="Refresh ESPN data" title="Refresh ESPN data">&#8635;</button></div>
+        <div class="hero-visual">
+          <div class="td-hero">
+            <p class="eyebrow">Jahmyr Gibbs · Detroit Lions · #0</p>
+            <h1 id="hero-heading">Chasing 31.</h1>
+            <div class="td-kicker" id="season-label">TOUCHDOWNS IN 2026</div>
+            <div class="kinetic-number" id="kinetic-number" aria-label="Touchdown total loading">
               <canvas id="speed-canvas" aria-hidden="true"></canvas>
               <div class="number-wrap">
                 <div class="number-trail trail-one"></div>
                 <div class="number-trail trail-two"></div>
                 <div class="number-trail trail-three"></div>
-                <div class="number-ghost ghost-one" aria-hidden="true">0</div>
-                <div class="number-ghost ghost-two" aria-hidden="true">0</div>
-                <div class="number-main" id="number-main">0</div>
-                <div class="number-highlight" id="number-highlight" aria-hidden="true">0</div>
+                <div class="number-ghost ghost-one" aria-hidden="true">—</div>
+                <div class="number-ghost ghost-two" aria-hidden="true">—</div>
+                <div class="number-main" id="number-main">—</div>
+                <div class="number-highlight" id="number-highlight" aria-hidden="true">—</div>
               </div>
             </div>
 
-              <div class="hero-meta">
-                <div class="hero-copy">
-                  <strong id="season-triples" class="visually-hidden">0</strong>
-                </div>
-              </div>
-            </div>
 
-            <div class="hero-art-spot" aria-label="Corbin Carroll">
-              <img
-                class="hero-player-art"
-                src="./corbinfancy.png"
-                alt=""
-                aria-hidden="true"
-              />
-            </div>
+            <strong id="season-touchdowns" class="visually-hidden">Loading</strong>
+            <p class="hero-breakdown"><span id="rush-total">—</span> rushing <span class="divider">/</span> <span id="rec-total">—</span> receiving <span class="divider">/</span> <span id="other-total">—</span> other</p>
           </div>
-
-          <div class="kpis" aria-label="Snapshot numbers">
-            <div class="kpi kpi-accent">
-              <div class="kpi-label">Career</div>
-              <div class="kpi-value" id="career-triples">--</div>
-              <div class="kpi-sub" id="career-seasons-main">-- seasons</div>
-              <div class="career-bars" aria-hidden="true">
-                <span></span><span></span><span></span><span></span><span></span>
-              </div>
-            </div>
-          </div>
-
-          <div class="error" id="error" hidden></div>
-        </section>
-
-        <section class="recent-block" aria-labelledby="recent-heading">
-          <div class="section-head">
-            <h2 id="recent-heading">Most Recent</h2>
-          </div>
-          <div class="latest-columns" aria-hidden="true">
-            <span></span>
-            <span>Against</span>
-            <span>Day</span>
-          </div>
-          <ol class="triples-list" id="recent-triples">
-            <li class="empty">...</li>
-          </ol>
-        </section>
-
-        <div class="stack">
-          <section class="panel section" aria-labelledby="career-heading">
-            <div class="section-head">
-                <h2 id="career-heading">By Year</h2>
-            </div>
-            <div class="table-wrap">
-              <table>
-                <thead>
-                  <tr>
-                    <th>Year</th>
-                    <th>Team</th>
-                    <th>Triples</th>
-                  </tr>
-                </thead>
-                <tbody id="career-table">
-                  <tr>
-                    <td colspan="3" class="empty">...</td>
-                  </tr>
-                </tbody>
-              </table>
-            </div>
-          </section>
-
-          <section class="panel section" aria-labelledby="leaderboard-heading">
-            <div class="section-head">
-              <h2 id="leaderboard-heading">Leaderboard</h2>
-            </div>
-            <div class="leaderboard-grid">
-              <div class="leaderboard-card">
-                <div class="kpi-label" id="season-rank-label">2026</div>
-                <ol class="leaderboard-list" id="season-leaderboard">
-                  <li class="empty">...</li>
-                </ol>
-              </div>
-              <div class="leaderboard-card leaderboard-career">
-                <div class="kpi-label">Career</div>
-                <div class="leaderboard-columns">
-                  <span>Player</span>
-                  <span>Seasons</span>
-                  <span>Triples</span>
-                </div>
-                <ol class="leaderboard-list" id="career-leaderboard">
-                  <li class="empty">...</li>
-                </ol>
-              </div>
-            </div>
-            <p class="leaderboard-disclaimer">
-              Rankings use official MLB Stats API data and may differ from other sources.
-            </p>
-
-          </section>
+          <div class="hero-art-spot"><div class="player-zero" aria-hidden="true">0</div><img class="hero-player-art" src="gibbs.png" alt="Jahmyr Gibbs" width="600" height="436" /><span class="player-caption">JAHMYR GIBBS / RB</span></div>
         </div>
-        <footer class="site-footer">
-          <section id="sms-alerts" class="section triple-alerts" aria-labelledby="alerts-heading">
+        <div class="record-context"><div><strong id="record-count">— of 31 TDs</strong><span>LaDainian Tomlinson · 31 TDs · 2006 · 16 games</span></div><progress id="record-progress" max="31" value="0" aria-label="Touchdowns toward the single-season record">Loading</progress></div>
+        <div class="kpis" aria-label="Record chase numbers">
+          <div class="kpi kpi-accent"><div class="kpi-label">17-game pace</div><div class="kpi-value" id="pace-total">—</div><div class="kpi-sub" id="games-remaining">— games remaining</div></div>
+          <div class="kpi"><div class="kpi-label">To tie / to break</div><div class="kpi-value"><span id="to-tie">—</span><span class="kpi-slash"> / </span><span id="to-break">—</span></div><div class="kpi-sub">Touchdowns needed</div></div>
+          <div class="kpi"><div class="kpi-label">Games played</div><div class="kpi-value" id="games-played">—</div><div class="kpi-sub">Gibbs appearances / 17</div></div>
+          <div class="kpi"><div class="kpi-label">Career TDs</div><div class="kpi-value" id="career-touchdowns">—</div><div class="kpi-sub">Regular season</div></div>
+        </div>
+        <div class="error" id="error" hidden role="status"></div>
+      </section>
+      <section class="panel section game-log-section" aria-labelledby="log-heading">
+        <div class="section-head"><h2 id="log-heading">Every game. Every score.</h2><span class="eyebrow">2026 game log</span></div>
+        <div class="table-wrap"><table><thead><tr><th scope="col">Date</th><th scope="col">Opponent</th><th scope="col">Rush TD</th><th scope="col">Rec TD</th><th scope="col">Total TD</th></tr></thead><tbody id="game-log"><tr><td colspan="5" class="empty">Loading game boxscores…</td></tr></tbody></table></div>
+      </section>
+      <div class="stack">
+        <section class="panel section" aria-labelledby="pace-heading"><div class="section-head"><h2 id="pace-heading">The road to 31</h2></div><div class="chart-legend"><span>● Gibbs</span><span>┄ 31-TD pace over 17 games</span></div><div id="pace-chart"><p class="empty">Loading pace chart…</p></div><p id="pace-note" class="leaderboard-disclaimer">Projection uses Gibbs' appearances. The chart uses completed Lions games; bye weeks and playoffs are excluded.</p><p class="leaderboard-disclaimer">Tomlinson set the record in 16 games. Gibbs has a 17-game season.</p></section>
+        <section class="panel section" aria-labelledby="leaderboard-heading"><div class="section-head"><h2 id="leaderboard-heading">NFL touchdown leaders</h2></div><div class="kpi-label" id="season-rank-label">2026 NFL</div><ol class="leaderboard-list" id="season-leaderboard"><li class="empty">Loading touchdown leaders…</li></ol><p class="leaderboard-disclaimer">Total touchdowns scored, excluding passing TDs. ESPN data · Regular season only · Updates every 5 minutes.</p></section>
+      </div>
+      <footer class="site-footer">
+          <section id="sms-alerts" class="section td-alerts" aria-labelledby="alerts-heading">
             <div class="alerts-copy">
-              <h2 id="alerts-heading">Triple alerts</h2>
-              <p>He triples. You get a text.</p>
+              <h2 id="alerts-heading">Touchdown alerts</h2>
+              <p>He scores. You get a text.</p>
               <p>SMS alerts are optional. View all the stats without an account, phone number, or text alerts.</p>
-              <p>Sign up before launch to save your number. We will send a confirmation text after alerts launch; reply YES to activate. No texts are sent when you submit now.</p>
+              <p>Touchdown texts are coming soon. Phone signup is not open yet; no numbers are being collected.</p>
             </div>
             <form id="sms-form" class="sms-form" aria-describedby="sms-form-status sms-disclosure">
               <label for="sms-phone">Your phone number <span>(US only)</span></label>
               <div class="sms-form-row">
-                <input id="sms-phone" name="phone" type="tel" autocomplete="tel" inputmode="tel" maxlength="25" placeholder="(520) 555-0123" aria-describedby="sms-form-status" />
+                <input id="sms-phone" name="phone" type="tel" autocomplete="tel" inputmode="tel" maxlength="25" placeholder="(313) 555-0123" aria-describedby="sms-form-status" />
                 <button id="sms-form-submit" class="sms-button" type="submit" disabled>Continue without texts</button>
               </div>
-              <p id="sms-form-status" class="sms-form-status" role="status" aria-live="polite" aria-atomic="true" tabindex="-1">Enable JavaScript and complete the security check to save your signup request.</p>
+              <p id="sms-form-status" class="sms-form-status" role="status" aria-live="polite" aria-atomic="true" tabindex="-1">Phone signup is not open yet. All stats are available without texts.</p>
               <label class="sms-consent" for="sms-consent">
                 <input id="sms-consent" name="consent" type="checkbox" />
-                <span>Optional: I agree to receive recurring automated Corbin Triples alerts at the phone number entered above. Consent is not required to view stats or make a purchase.</span>
+                <span>Optional: I agree to receive recurring automated Gibbs TD Chase alerts at the phone number entered above. Consent is not required to view stats or make a purchase.</span>
               </label>
-              <p id="sms-disclosure" class="sms-disclosure">After launch, reply YES to your confirmation text to activate. Frequency varies. Message and data rates may apply. STOP to cancel, HELP for help. <a href="/sms-terms/">Terms</a> · <a href="/sms-privacy/">Privacy</a></p>
-              <p class="sms-skip"><a href="#triples-stats">Continue without texts — view the stats</a></p>
+              <p id="sms-disclosure" class="sms-disclosure">When signup opens, reply YES to your confirmation text to activate. Frequency varies. Message and data rates may apply. STOP to cancel, HELP for help. <a href="/sms-terms/">Terms</a> · <a href="/sms-privacy/">Privacy</a></p>
+              <p class="sms-skip"><a href="#td-stats">Continue without texts — view the stats</a></p>
               <div id="sms-turnstile"></div>
               <noscript><p>Enable JavaScript to use this signup form.</p></noscript>
             </form>
           </section>
-          <div class="tip-row">
-            <a class="tip-link" href="https://ko-fi.com/P1S7270J56" target="_blank" rel="noopener noreferrer" aria-label="Tip jar on Ko-fi (opens in a new tab)">
-              <svg class="tip-icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M4 7h12v7a5 5 0 0 1-5 5H9a5 5 0 0 1-5-5V7Z"/><path d="M16 8h2a3 3 0 0 1 0 6h-2M3 22h16M8 2v2m4-2v2"/></svg>
-              Tip jar <span aria-hidden="true">↗</span>
-            </a>
-          </div>
-        </footer>
-      </main>
-    </div>
 
-    <script src="app.js"></script>
-    <script src="alerts-config.js"></script>
-    <script src="alerts.js"></script>
-  </body>
+        <div class="tip-row"><a class="tip-link" href="https://ko-fi.com/P1S7270J56" target="_blank" rel="noopener noreferrer">Support the chase ↗</a></div>
+        <p class="fan-disclaimer">Gibbs TD Chase is an independent fan project and is not affiliated with the NFL, the Detroit Lions, or Jahmyr Gibbs. <a href="https://www.espn.com/nfl/player/_/id/4429795/jahmyr-gibbs" target="_blank" rel="noopener noreferrer">Stats and player photo: ESPN ↗</a></p>
+      </footer>
+    </main>
+  </div>
+  <script src="data-config.js"></script>
+  <script type="module" src="app.js"></script>
+  <script src="alerts-config.js"></script>
+  <script src="alerts.js"></script>
+</body>
 </html>

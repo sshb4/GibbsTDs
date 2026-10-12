@@ -29,7 +29,7 @@ export async function webSignup(request, env, now = Date.now()) {
   const headers = { 'Cache-Control': 'no-store', Vary: 'Origin' };
   if (allowed) headers['Access-Control-Allow-Origin'] = origin;
   const reply = (status, message) => Response.json({ message }, { status, headers });
-  if (!allowed) return reply(403, 'This signup must come from the Corbin Triples website.');
+  if (!allowed) return reply(403, 'This signup must come from the Gibbs TD Chase website.');
   if (request.method === 'OPTIONS') return new Response(null, { status: 204, headers: {
     ...headers, 'Access-Control-Allow-Methods': 'POST, OPTIONS', 'Access-Control-Allow-Headers': 'Content-Type', 'Access-Control-Max-Age': '600'
   } });
@@ -107,7 +107,7 @@ export async function webSignup(request, env, now = Date.now()) {
       const response = await fetch(`https://api.twilio.com/2010-04-01/Accounts/${env.TWILIO_ACCOUNT_SID}/Messages.json`, {
         method: 'POST', signal: AbortSignal.timeout(15_000),
         headers: { Authorization: `Basic ${btoa(`${env.TWILIO_ACCOUNT_SID}:${env.TWILIO_AUTH_TOKEN}`)}`, 'Content-Type': 'application/x-www-form-urlencoded' },
-        body: new URLSearchParams({ To: phone, MessagingServiceSid: env.TWILIO_MESSAGING_SERVICE_SID, Body: SIGNUP_PROMPT })
+        body: new URLSearchParams({ To: phone, MessagingServiceSid: env.TWILIO_MESSAGING_SERVICE_SID, Body: SIGNUP_PROMPT.replace('{terms}', `${env.SITE_ORIGIN}/sms-terms/`) })
       });
       const result = await response.json();
       if (!response.ok) {

@@ -1,0 +1,71 @@
+{
+  "splits": {
+    "categories": [
+      {
+        "name": "general",
+        "stats": [
+          {
+            "name": "gamesPlayed",
+            "value": 5.0
+          }
+        ]
+      },
+      {
+        "name": "passing",
+        "stats": [
+          {
+            "name": "totalTouchdowns",
+            "value": 9.0
+          }
+        ]
+      },
+      {
+        "name": "rushing",
+        "stats": [
+          {
+            "name": "rushingTouchdowns",
+            "value": 7.0
+          },
+          {
+            "name": "totalTouchdowns",
+            "value": 9.0
+          }
+        ]
+      },
+      {
+        "name": "receiving",
+        "stats": [
+          {
+            "name": "receivingTouchdowns",
+            "value": 2.0
+          },
+          {
+            "name": "totalTouchdowns",
+            "value": 9.0
+          }
+        ]
+      },
+      {
+        "name": "scoring",
+        "stats": [
+          {
+            "name": "receivingTouchdowns",
+            "value": 2.0
+          },
+          {
+            "name": "returnTouchdowns",
+            "value": 0.0
+          },
+          {
+            "name": "rushingTouchdowns",
+            "value": 7.0
+          },
+          {
+            "name": "totalTouchdowns",
+            "value": 9.0
+          }
+        ]
+      }
+    ]
+  }
+}

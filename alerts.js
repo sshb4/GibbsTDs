@@ -1,5 +1,5 @@
 (() => {
-  const config = window.CORBIN_ALERTS || {};
+  const config = window.GIBBS_ALERTS || {};
   const hasSupportEmail = /^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(config.supportEmail || '');
   const form = document.getElementById('sms-form');
   if (form) {
@@ -22,19 +22,20 @@
       const base = new URL(config.apiBaseUrl);
       if (base.protocol === 'https:') endpoint = new URL('/subscribe', base).href;
     } catch { /* Keep the form closed until the backend is connected. */ }
+    if (!endpoint || !config.turnstileSiteKey) status.textContent = 'Phone signup is not open yet. All stats are available without texts.';
     // Keep the action available so validation explains what is missing.
     // Consent and security verification are still required before any request.
     const updateButton = () => { submit.disabled = busy; };
     const updateChoice = () => {
       input.required = consent.checked;
-      submit.textContent = consent.checked ? 'Get triple texts' : 'Continue without texts';
+      submit.textContent = consent.checked ? 'Get touchdown texts' : 'Continue without texts';
     };
     consent.addEventListener('change', updateChoice);
     updateChoice();
     updateButton();
     if (endpoint && config.turnstileSiteKey) {
       status.textContent = 'Complete the security check, then submit your signup request.';
-      window.onCorbinTurnstileReady = () => {
+      window.onGibbsTurnstileReady = () => {
         const container = document.getElementById('sms-turnstile');
         let widgetSize;
         resizeWidget = () => {
@@ -65,7 +66,7 @@
         }
       };
       const script = document.createElement('script');
-      script.src = 'https://challenges.cloudflare.com/turnstile/v0/api.js?onload=onCorbinTurnstileReady&render=explicit';
+      script.src = 'https://challenges.cloudflare.com/turnstile/v0/api.js?onload=onGibbsTurnstileReady&render=explicit';
       script.async = true;
       script.onerror = () => { status.textContent = 'The security check could not load. Refresh to try again.'; };
       document.head.append(script);

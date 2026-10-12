@@ -1,0 +1,373 @@
+{
+  "header": {
+    "id": "401872991",
+    "season": {
+      "year": 2026,
+      "current": true,
+      "type": 2
+    },
+    "competitions": [
+      {
+        "competitors": [
+          {
+            "team": {
+              "id": "22",
+              "abbreviation": "ARI"
+            }
+          },
+          {
+            "team": {
+              "id": "8",
+              "abbreviation": "DET"
+            }
+          }
+        ]
+      }
+    ]
+  },
+  "scoringPlays": [
+    {
+      "id": "401872991484",
+      "text": "Teagan Quitoriano 2 Yd pass from Jacoby Brissett (Chad Ryland Kick)",
+      "team": {
+        "id": "22"
+      },
+      "scoringType": {
+        "name": "touchdown",
+        "displayName": "Touchdown",
+        "abbreviation": "TD"
+      }
+    },
+    {
+      "id": "4018729911237",
+      "text": "(No Huddle) J.Gibbs up the middle for 1 yard, TOUCHDOWN. J.Bates extra point is GOOD, Center-H.Hatten, Holder-J.Fox.",
+      "team": {
+        "id": "8"
+      },
+      "scoringType": {
+        "name": "touchdown",
+        "displayName": "Touchdown",
+        "abbreviation": "TD"
+      }
+    },
+    {
+      "id": "4018729911567",
+      "text": "Sam LaPorta 38 Yd pass from Jared Goff (Jake Bates Kick)",
+      "team": {
+        "id": "8"
+      },
+      "scoringType": {
+        "name": "touchdown",
+        "displayName": "Touchdown",
+        "abbreviation": "TD"
+      }
+    },
+    {
+      "id": "4018729911946",
+      "text": "Jameson Williams 8 Yd pass from Jared Goff (Jake Bates Kick)",
+      "team": {
+        "id": "8"
+      },
+      "scoringType": {
+        "name": "touchdown",
+        "displayName": "Touchdown",
+        "abbreviation": "TD"
+      }
+    },
+    {
+      "id": "4018729912334",
+      "text": "Jake Bates 46 Yd Field Goal",
+      "team": {
+        "id": "8"
+      },
+      "scoringType": {
+        "name": "field-goal",
+        "displayName": "Field Goal",
+        "abbreviation": "FG"
+      }
+    },
+    {
+      "id": "4018729912833",
+      "text": "Jameson Williams 39 Yd pass from Jared Goff (Jake Bates Kick)",
+      "team": {
+        "id": "8"
+      },
+      "scoringType": {
+        "name": "touchdown",
+        "displayName": "Touchdown",
+        "abbreviation": "TD"
+      }
+    },
+    {
+      "id": "4018729913134",
+      "text": "Teagan Quitoriano 13 Yd pass from Jacoby Brissett (Chad Ryland Kick)",
+      "team": {
+        "id": "22"
+      },
+      "scoringType": {
+        "name": "touchdown",
+        "displayName": "Touchdown",
+        "abbreviation": "TD"
+      }
+    },
+    {
+      "id": "4018729913374",
+      "text": "Jared Goff 1 Yd Rush (Jake Bates Kick)",
+      "team": {
+        "id": "8"
+      },
+      "scoringType": {
+        "name": "touchdown",
+        "displayName": "Touchdown",
+        "abbreviation": "TD"
+      }
+    },
+    {
+      "id": "4018729914030",
+      "text": "Jahmyr Gibbs 3 Yd Rush (Jake Bates Kick)",
+      "team": {
+        "id": "8"
+      },
+      "scoringType": {
+        "name": "touchdown",
+        "displayName": "Touchdown",
+        "abbreviation": "TD"
+      }
+    },
+    {
+      "id": "4018729914402",
+      "text": "Trey McBride 9 Yd pass from Jacoby Brissett (Chad Ryland Kick)",
+      "team": {
+        "id": "22"
+      },
+      "scoringType": {
+        "name": "touchdown",
+        "displayName": "Touchdown",
+        "abbreviation": "TD"
+      }
+    }
+  ],
+  "drives": {
+    "previous": [
+      {
+        "plays": []
+      },
+      {
+        "plays": [
+          {
+            "id": "401872991484",
+            "text": "J.Brissett pass short right to T.Quitoriano for 2 yards, TOUCHDOWN. C.Ryland extra point is GOOD, Center-C.Kreiter, Holder-B.Gillikin.",
+            "period": {
+              "number": 1
+            },
+            "wallclock": "2026-10-11T20:39:47Z",
+            "scoringPlay": true,
+            "scoringType": {
+              "name": "touchdown",
+              "displayName": "Touchdown",
+              "abbreviation": "TD"
+            }
+          }
+        ]
+      },
+      {
+        "plays": []
+      },
+      {
+        "plays": []
+      },
+      {
+        "plays": []
+      },
+      {
+        "plays": []
+      },
+      {
+        "plays": [
+          {
+            "id": "4018729911237",
+            "text": "(No Huddle) J.Gibbs up the middle for 1 yard, TOUCHDOWN. J.Bates extra point is GOOD, Center-H.Hatten, Holder-J.Fox.",
+            "period": {
+              "number": 2
+            },
+            "wallclock": "2026-10-11T21:09:41Z",
+            "scoringPlay": true,
+            "scoringType": {
+              "name": "touchdown",
+              "displayName": "Touchdown",
+              "abbreviation": "TD"
+            }
+          }
+        ]
+      },
+      {
+        "plays": []
+      },
+      {
+        "plays": [
+          {
+            "id": "4018729911567",
+            "text": "J.Goff pass short right to S.LaPorta for 38 yards, TOUCHDOWN. J.Bates extra point is GOOD, Center-H.Hatten, Holder-J.Fox.",
+            "period": {
+              "number": 2
+            },
+            "wallclock": "2026-10-11T21:27:50Z",
+            "scoringPlay": true,
+            "scoringType": {
+              "name": "touchdown",
+              "displayName": "Touchdown",
+              "abbreviation": "TD"
+            }
+          }
+        ]
+      },
+      {
+        "plays": []
+      },
+      {
+        "plays": [
+          {
+            "id": "4018729911946",
+            "text": "(Shotgun) J.Goff pass short left to J.Williams for 8 yards, TOUCHDOWN. J.Bates extra point is GOOD, Center-H.Hatten, Holder-J.Fox.",
+            "period": {
+              "number": 2
+            },
+            "wallclock": "2026-10-11T21:40:02Z",
+            "scoringPlay": true,
+            "scoringType": {
+              "name": "touchdown",
+              "displayName": "Touchdown",
+              "abbreviation": "TD"
+            }
+          }
+        ]
+      },
+      {
+        "plays": []
+      },
+      {
+        "plays": [
+          {
+            "id": "4018729912334",
+            "text": "J.Bates 46 yard field goal is GOOD, Center-H.Hatten, Holder-J.Fox.",
+            "period": {
+              "number": 2
+            },
+            "wallclock": "2026-10-11T21:55:06Z",
+            "scoringPlay": true,
+            "scoringType": {
+              "name": "field-goal",
+              "displayName": "Field Goal",
+              "abbreviation": "FG"
+            }
+          }
+        ]
+      },
+      {
+        "plays": []
+      },
+      {
+        "plays": []
+      },
+      {
+        "plays": [
+          {
+            "id": "4018729912833",
+            "text": "(Shotgun) J.Goff pass deep right to J.Williams for 39 yards, TOUCHDOWN. ARZ-W.Nolen was injured during the play. J.Bates extra point is GOOD, Center-H.Hatten, Holder-J.Fox.",
+            "period": {
+              "number": 3
+            },
+            "wallclock": "2026-10-11T22:22:22Z",
+            "scoringPlay": true,
+            "scoringType": {
+              "name": "touchdown",
+              "displayName": "Touchdown",
+              "abbreviation": "TD"
+            }
+          }
+        ]
+      },
+      {
+        "plays": [
+          {
+            "id": "4018729913134",
+            "text": "J.Brissett pass short right to T.Quitoriano for 13 yards, TOUCHDOWN. C.Ryland extra point is GOOD, Center-C.Kreiter, Holder-B.Gillikin.",
+            "period": {
+              "number": 3
+            },
+            "wallclock": "2026-10-11T22:34:08Z",
+            "scoringPlay": true,
+            "scoringType": {
+              "name": "touchdown",
+              "displayName": "Touchdown",
+              "abbreviation": "TD"
+            }
+          }
+        ]
+      },
+      {
+        "plays": [
+          {
+            "id": "4018729913374",
+            "text": "J.Goff up the middle for 1 yard, TOUCHDOWN. J.Bates extra point is GOOD, Center-H.Hatten, Holder-J.Fox.",
+            "period": {
+              "number": 3
+            },
+            "wallclock": "2026-10-11T22:42:40Z",
+            "scoringPlay": true,
+            "scoringType": {
+              "name": "touchdown",
+              "displayName": "Touchdown",
+              "abbreviation": "TD"
+            }
+          }
+        ]
+      },
+      {
+        "plays": []
+      },
+      {
+        "plays": [
+          {
+            "id": "4018729914030",
+            "text": "J.Gibbs right end for 3 yards, TOUCHDOWN. J.Bates extra point is GOOD, Center-H.Hatten, Holder-J.Fox.",
+            "period": {
+              "number": 4
+            },
+            "wallclock": "2026-10-11T23:07:34Z",
+            "scoringPlay": true,
+            "scoringType": {
+              "name": "touchdown",
+              "displayName": "Touchdown",
+              "abbreviation": "TD"
+            }
+          }
+        ]
+      },
+      {
+        "plays": [
+          {
+            "id": "4018729914402",
+            "text": "(Shotgun) J.Brissett pass short right to T.McBride for 9 yards, TOUCHDOWN. C.Ryland extra point is GOOD, Center-C.Kreiter, Holder-B.Gillikin.",
+            "period": {
+              "number": 4
+            },
+            "wallclock": "2026-10-11T23:18:41Z",
+            "scoringPlay": true,
+            "scoringType": {
+              "name": "touchdown",
+              "displayName": "Touchdown",
+              "abbreviation": "TD"
+            }
+          }
+        ]
+      },
+      {
+        "plays": []
+      },
+      {
+        "plays": []
+      }
+    ]
+  }
+}

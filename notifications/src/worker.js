@@ -1,5 +1,6 @@
 import { validateRequest } from 'twilio/lib/webhooks/webhooks.js';
-import { tripleEvents, TEAM_ID } from './triples.js';
+import { touchdownEvents, TEAM_ID, SEASON } from './touchdowns.js';
+import { statsResponse } from '../../stats-api.mjs';
 import { webSignup } from './signup.js';
 
 const MINUTE = 60_000;
@@ -31,24 +32,24 @@ export async function incoming(env, params, now = Date.now()) {
   // START unblocks the sender; it never silently enrolls somebody.
   if (advanced === 'START' || advanced === 'HELP') return '';
   if (keyword === 'HELP' || keyword === 'INFO') {
-    return `Corbin Triples: Help: ${env.SUPPORT_EMAIL}. Reply STOP to cancel. Msg & data rates may apply.`;
+    return `Gibbs TD Chase: Help: ${env.SUPPORT_EMAIL}. Reply STOP to cancel. Msg & data rates may apply.`;
   }
   if (keyword === 'START' || keyword === 'UNSTOP') return '';
-  if (params.FromCountry !== 'US') return 'Corbin Triples alerts currently support US numbers only.';
+  if (params.FromCountry !== 'US') return 'Gibbs TD Chase alerts currently support US numbers only.';
 
   const subscriber = await db(env, 'SELECT * FROM subscribers WHERE phone=?', phone).first();
   if (keyword === 'YES') {
     if (subscriber?.status === 'active') return '';
     if (subscriber?.status !== 'pending' || now - subscriber.requested_at > 15 * MINUTE) {
-      return 'Corbin Triples: Request alerts at corbinstriples.com. Reply YES within 15 minutes of your confirmation text.';
+      return `Gibbs TD Chase: Request alerts at ${env.SITE_ORIGIN || 'the website'}. Reply YES within 15 minutes of your confirmation text.`;
     }
     const result = await db(env, `UPDATE subscribers SET status='active', confirmed_at=?, updated_at=?
       WHERE phone=? AND status='pending' AND requested_at>=?
       AND (SELECT COUNT(*) FROM subscribers WHERE status='active') < ?`,
     now, now, phone, now - 15 * MINUTE, bounded(env.MAX_SUBSCRIBERS, 100, 1000)).run();
     return result.meta.changes
-      ? 'Corbin Triples: You are in! One text per regular-season triple. Frequency varies. Msg & data rates may apply. Reply STOP to quit, HELP for help.'
-      : 'Corbin Triples: The list is full right now. Please try again later.';
+      ? 'Gibbs TD Chase: You are in! One text per regular-season touchdown. Frequency varies. Msg & data rates may apply. Reply STOP to quit, HELP for help.'
+      : 'Gibbs TD Chase: The list is full right now. Please try again later.';
   }
   // New subscriptions originate only from the website consent form.
   return '';
@@ -56,6 +57,7 @@ export async function incoming(env, params, now = Date.now()) {
 
 export async function handleRequest(request, env) {
   const url = new URL(request.url);
+  if (url.pathname.startsWith('/api/nfl/')) return statsResponse(request, { cache: globalThis.caches?.default });
   if (url.pathname === '/subscribe') return webSignup(request, env);
   if (url.pathname === '/health' && request.method === 'GET') {
     return Response.json({ ok: true, alertsEnabled: env.ALERTS_ENABLED === 'true' });
@@ -165,23 +167,28 @@ export async function dispatch(env, now = Date.now()) {
 }
 
 export async function poll(env, now = Date.now()) {
+  if (!env.DB) {
+    if (env.ALERTS_ENABLED === 'true') throw new Error('Alert database is not configured');
+    return;
+  }
   await cleanup(env, now);
   const startAt = Date.parse(env.ALERTS_START_AT);
   if (env.ALERTS_ENABLED !== 'true') return;
   if (!Number.isFinite(startAt) || !env.PUBLIC_URL || !env.TWILIO_ACCOUNT_SID || !env.TWILIO_AUTH_TOKEN || !env.TWILIO_MESSAGING_SERVICE_SID) throw new Error('Alert setup incomplete');
-  const date = time => new Date(time).toISOString().slice(0, 10);
   try {
-    const schedule = await fetchJson(`https://statsapi.mlb.com/api/v1/schedule?sportId=1&teamId=${TEAM_ID}&startDate=${date(now - DAY)}&endDate=${date(now)}`);
-    for (const day of schedule.dates || []) {
-      for (const game of day.games || []) {
-        if (game.gameType !== 'R' || !['Live', 'Final'].includes(game.status?.abstractGameState)) continue;
-        try {
-          const feed = await fetchJson(`https://statsapi.mlb.com/api/v1.1/game/${game.gamePk}/feed/live`);
-          await recordEvents(env, tripleEvents(feed, startAt, now));
-        } catch { console.error('MLB game check failed', game.gamePk); }
-      }
+    const schedule = await fetchJson(`https://site.api.espn.com/apis/site/v2/sports/football/nfl/teams/${TEAM_ID}/schedule?season=${SEASON}&seasontype=2`);
+    if (Number(schedule.season?.year) !== SEASON || Number(schedule.season?.type) !== 2) throw new Error('Unexpected ESPN season');
+    for (const game of schedule.events || []) {
+      const status = game.competitions?.[0]?.status?.type;
+      const kickoff = Date.parse(game.date);
+      if (Number(game.season?.year) !== SEASON || Number(game.seasonType?.type ?? game.seasonType?.id) !== 2 ||
+          (!status?.completed && status?.state !== 'in') || !Number.isFinite(kickoff) || kickoff > now || kickoff < now - DAY) continue;
+      try {
+        const feed = await fetchJson(`https://site.api.espn.com/apis/site/v2/sports/football/nfl/summary?event=${game.id}`);
+        await recordEvents(env, touchdownEvents(feed, startAt, now, env.SITE_ORIGIN));
+      } catch { console.error('ESPN game check failed', game.id); }
     }
-  } catch { console.error('MLB schedule check failed'); }
+  } catch { console.error('ESPN schedule check failed'); }
   await dispatch(env, now);
 }
 
