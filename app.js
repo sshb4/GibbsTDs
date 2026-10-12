@@ -202,6 +202,11 @@ function renderSeason(stats) {
   $('record-progress').value = Math.min(stats.total, RECORD);
   $('record-progress').textContent = `${stats.total} of ${RECORD}`;
   $('record-count').textContent = stats.total > RECORD ? `${stats.total} TDs · Record broken` : stats.total === RECORD ? `${stats.total} TDs · Record tied` : `${stats.total} of ${RECORD} TDs`;
+  $('hero-heading').textContent = stats.total > RECORD ? 'Record broken.' : stats.total === RECORD ? 'Record tied.' : `Chasing ${RECORD}.`;
+  const tomlinsonRecord = `LaDainian Tomlinson · ${RECORD} TDs · 2006 · 16 games`;
+  const gibbsRecord = `Jahmyr Gibbs · ${stats.total} TDs · ${SEASON}${stats.games === null ? '' : ` · ${stats.games} ${stats.games === 1 ? 'game' : 'games'}`}`;
+  $('current-record').textContent = stats.total > RECORD ? `Current Record: ${gibbsRecord}` : stats.total === RECORD ? `Current Record (tied): ${tomlinsonRecord} / ${gibbsRecord}` : `Current Record: ${tomlinsonRecord}`;
+  $('previous-record').hidden = stats.total <= RECORD;
   $('pace-note').textContent = stats.games > 0 ? `Season rate: ${(stats.total / stats.games).toFixed(2)} TDs per game × 17 games. Projection, not a prediction.` : 'Projection begins after his first appearance.';
 }
 async function loadGameLog() {

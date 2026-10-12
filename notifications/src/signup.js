@@ -107,7 +107,7 @@ export async function webSignup(request, env, now = Date.now()) {
       const response = await fetch(`https://api.twilio.com/2010-04-01/Accounts/${env.TWILIO_ACCOUNT_SID}/Messages.json`, {
         method: 'POST', signal: AbortSignal.timeout(15_000),
         headers: { Authorization: `Basic ${btoa(`${env.TWILIO_ACCOUNT_SID}:${env.TWILIO_AUTH_TOKEN}`)}`, 'Content-Type': 'application/x-www-form-urlencoded' },
-        body: new URLSearchParams({ To: phone, MessagingServiceSid: env.TWILIO_MESSAGING_SERVICE_SID, Body: SIGNUP_PROMPT.replace('{terms}', `${env.SITE_ORIGIN}/sms-terms/`) })
+        body: new URLSearchParams({ To: phone, MessagingServiceSid: env.TWILIO_MESSAGING_SERVICE_SID, Body: SIGNUP_PROMPT.replace('{terms}', `${env.SITE_ORIGIN}/sms-terms.html`) })
       });
       const result = await response.json();
       if (!response.ok) {

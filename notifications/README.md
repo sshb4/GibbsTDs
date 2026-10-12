@@ -1,6 +1,6 @@
 # Gibbs touchdown texts
 
-A separate Cloudflare Worker handles website consent, Twilio webhooks, D1 subscriptions, ESPN polling, and delivery. The frontend remains a static site. **The Gibbs Worker is deployed at `https://gibbs-td-alerts.sashacbates.workers.dev`; the frontend stats connection is configured in `data-config.js`.** Signup and delivery are disabled; the site domain is gibbstouchdowns.com; the SMS webhook URL, phone, Turnstile widget, and database remain unconfigured.
+A separate Cloudflare Worker handles website consent, Twilio webhooks, D1 subscriptions, ESPN polling, and delivery. The frontend remains a static site. **The Gibbs Worker is deployed at `https://gibbs-td-alerts.sashacbates.workers.dev`; the frontend stats connection is configured in `data-config.js`.** Signup and delivery are disabled; the site domain is gibbstouchdowns.com; the SMS webhook URL, phone, and Turnstile widget remain unconfigured. The separate Gibbs D1 database `gibbs-td-alerts-db` exists and is configured as binding `DB` in `wrangler.jsonc`; its ID was verified against Cloudflare on October 12, 2026.
 
 ## Data and alert detection
 
@@ -16,23 +16,22 @@ The active entry point is `src/worker.js`; the supplied top-level Worker, detect
 
 `GET /api/nfl/season`, `/api/nfl/career`, `/api/nfl/leaders`, `/api/nfl/schedule`, `/api/nfl/summary?event=...`, and `/api/nfl/athlete?id=...` proxy only predefined ESPN resources. Public responses allow cross-origin browser reads and cache for 60 seconds. Errors return 502 and are not cached. These routes need no credentials or database. A stats-only Worker can be deployed with the current config and alerts disabled; set the returned origin in `../data-config.js` or route `/api/nfl/*` on gibbstouchdowns.com to the Worker. Deploying the static site without this API leaves stats unavailable.
 
-## Configure a new Gibbs service
+## Configure the Gibbs service
 
 1. `SITE_ORIGIN` is configured as `https://gibbstouchdowns.com`, matching the CNAME, canonical URLs, and sitemap. Hosting has not been deployed.
-2. Create a **separate Gibbs D1 database** and Worker; do not reuse Corbin's subscribers or deployment settings.
+2. The separate Gibbs Worker and D1 database already exist. Use `gibbs-td-alerts-db`; do not reuse Corbin's subscribers or deployment settings.
 3. Configure a Twilio sender and Messaging Service for the Gibbs program. Set `TWILIO_PHONE_NUMBER` and `SUPPORT_EMAIL` consistently in Worker vars, frontend config, and provider configuration.
 4. Create a Turnstile widget for the Gibbs domain; put its site key in `../alerts-config.js` and its secret in Worker secrets.
 
 ```sh
 npm ci
 npx wrangler login
-npx wrangler d1 create gibbs-td-alerts
 ```
 
-Add `d1_databases` to `wrangler.jsonc` with binding `DB`, database name `gibbs-td-alerts`, the returned `database_id`, and `migrations_dir: "migrations"`. The checked-in configuration deliberately has no database binding, so stats-only deployment is possible. Then apply all migrations to the new database:
+`wrangler.jsonc` already contains binding `DB` for `gibbs-td-alerts-db` (ID `120d11ff-14d5-4534-a745-a6602339ce6c`). Migration files are in the default `migrations` directory. Before enabling SMS, confirm migrations are applied and configure the provider secrets:
 
 ```sh
-npx wrangler d1 migrations apply gibbs-td-alerts --remote
+npx wrangler d1 migrations apply gibbs-td-alerts-db --remote
 npx wrangler secret put TWILIO_ACCOUNT_SID
 npx wrangler secret put TWILIO_AUTH_TOKEN
 npx wrangler secret put TWILIO_MESSAGING_SERVICE_SID
@@ -63,7 +62,7 @@ When ready, set `ALERTS_START_AT` to the current UTC timestamp, then `ALERTS_ENA
 ```sh
 npm test
 npm run check
-npx wrangler d1 migrations apply gibbs-td-alerts --local
+npx wrangler d1 migrations apply gibbs-td-alerts-db --local
 npm run dev
 ```
 

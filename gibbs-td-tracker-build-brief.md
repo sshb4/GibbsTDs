@@ -34,8 +34,8 @@ alerts.js           # SMS signup frontend logic
 alerts-config.js    # Public alert config (Twilio number, API URL, Turnstile key)
 analytics.js        # Analytics
 notifications/      # Cloudflare Worker backend for SMS alerts (wrangler.jsonc)
-sms-privacy/        # SMS privacy notice page
-sms-terms/          # SMS terms page
+sms-privacy.html    # SMS privacy notice page
+sms-terms.html      # SMS terms page
 ```
 
 ### How data flows in app.js

@@ -18,7 +18,7 @@
   <link rel="stylesheet" href="styles.css" />
 </head>
 <body>
-  <div class="season-banner">Detroit, meet history. <span>2026 regular season</span></div>
+  <div class="season-banner">Chasing the record <span>2026 regular season</span></div>
   <div class="wrap">
     <header class="site-header"><a href="./" class="brand">GIBBS<span>TD CHASE</span></a><a href="#sms-alerts">He scores. You get a text. ↗</a></header>
     <main class="grid" id="td-stats">
@@ -46,9 +46,9 @@
             <strong id="season-touchdowns" class="visually-hidden">Loading</strong>
             <p class="hero-breakdown"><span id="rush-total">—</span> rushing <span class="divider">/</span> <span id="rec-total">—</span> receiving <span class="divider">/</span> <span id="other-total">—</span> other</p>
           </div>
-          <div class="hero-art-spot"><div class="player-zero" aria-hidden="true">0</div><img class="hero-player-art" src="gibbs.png" alt="Jahmyr Gibbs" width="600" height="436" /><span class="player-caption">JAHMYR GIBBS / RB</span></div>
+          <div class="hero-art-spot"><span class="player-art-label" aria-hidden="true">DETROIT / 2026</span><img class="hero-player-art" src="gibbs.png" alt="Jahmyr Gibbs" width="600" height="436" /><span class="player-caption"><strong>JAHMYR GIBBS</strong><span>DETROIT LIONS / RB</span></span></div>
         </div>
-        <div class="record-context"><div><strong id="record-count">— of 31 TDs</strong><span>LaDainian Tomlinson · 31 TDs · 2006 · 16 games</span></div><progress id="record-progress" max="31" value="0" aria-label="Touchdowns toward the single-season record">Loading</progress></div>
+        <div class="record-context"><div><strong id="record-count">— of 31 TDs</strong><span id="current-record">Current Record: LaDainian Tomlinson · 31 TDs · 2006 · 16 games</span></div><span id="previous-record" hidden>Previous Record: LaDainian Tomlinson · 31 TDs · 2006 · 16 games</span><progress id="record-progress" max="31" value="0" aria-label="Touchdowns toward the single-season record">Loading</progress></div>
         <div class="kpis" aria-label="Record chase numbers">
           <div class="kpi kpi-accent"><div class="kpi-label">17-game pace</div><div class="kpi-value" id="pace-total">—</div><div class="kpi-sub" id="games-remaining">— games remaining</div></div>
           <div class="kpi"><div class="kpi-label">To tie / to break</div><div class="kpi-value"><span id="to-tie">—</span><span class="kpi-slash"> / </span><span id="to-break">—</span></div><div class="kpi-sub">Touchdowns needed</div></div>
@@ -84,7 +84,7 @@
                 <input id="sms-consent" name="consent" type="checkbox" />
                 <span>Optional: I agree to receive recurring automated Gibbs TD Chase alerts at the phone number entered above. Consent is not required to view stats or make a purchase.</span>
               </label>
-              <p id="sms-disclosure" class="sms-disclosure">When signup opens, reply YES to your confirmation text to activate. Frequency varies. Message and data rates may apply. STOP to cancel, HELP for help. <a href="/sms-terms/">Terms</a> · <a href="/sms-privacy/">Privacy</a></p>
+              <p id="sms-disclosure" class="sms-disclosure">When signup opens, reply YES to your confirmation text to activate. Frequency varies. Message and data rates may apply. STOP to cancel, HELP for help. <a href="/sms-terms.html">Terms</a> · <a href="/sms-privacy.html">Privacy</a></p>
               <p class="sms-skip"><a href="#td-stats">Continue without texts — view the stats</a></p>
               <div id="sms-turnstile"></div>
               <noscript><p>Enable JavaScript to use this signup form.</p></noscript>

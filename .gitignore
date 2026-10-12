@@ -1,5 +1,5 @@
 node_modules/
-notifications/.wrangler/
+.wrangler/
 notifications/.dev.vars*
 .env*
 .DS_Store
