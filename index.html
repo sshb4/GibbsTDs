@@ -20,14 +20,20 @@
 <body>
   <div class="season-banner">Chasing the record <span>2026 regular season</span></div>
   <div class="wrap">
-    <header class="site-header"><a href="./" class="brand"> JAYMYR GIBBS<span>TD CHASE</span></a><a href="#sms-alerts">He scores. You get a text. ↗</a></header>
     <main class="grid" id="td-stats">
       <section class="panel hero" aria-labelledby="hero-heading">
-        <div class="hero-status"><span id="status" role="status">Loading ESPN data…</span><button id="refresh-button" class="hero-refresh" type="button" aria-label="Refresh ESPN data" title="Refresh ESPN data">&#8635;</button></div>
+        <div class="hero-heading-row">
+          <div class="hero-intro">
+            <p class="eyebrow">Jahmyr Gibbs · Detroit Lions · #0</p>
+            <h1 id="hero-heading">Chasing 31</h1>
+          </div>
+          <div class="hero-tools">
+            <a class="hero-alert-link" href="#sms-alerts">He scores. You get a text. ↘</a>
+            <div class="hero-status"><span id="status" role="status">Loading ESPN data…</span><button id="refresh-button" class="hero-refresh" type="button" aria-label="Refresh ESPN data" title="Refresh ESPN data">&#8635;</button></div>
+          </div>
+        </div>
         <div class="hero-visual">
           <div class="td-hero">
-            <p class="eyebrow">Jahmyr Gibbs · Detroit Lions · #0</p>
-            <h1 id="hero-heading">Chasing 31.</h1>
             <div class="td-kicker" id="season-label">TOUCHDOWNS IN 2026</div>
             <div class="kinetic-number" id="kinetic-number" aria-label="Touchdown total loading">
               <canvas id="speed-canvas" aria-hidden="true"></canvas>
@@ -44,7 +50,7 @@
 
 
             <strong id="season-touchdowns" class="visually-hidden">Loading</strong>
-            <p class="hero-breakdown"><span id="rush-total">—</span> rushing <span class="divider">/</span> <span id="rec-total">—</span> receiving <span class="divider">/</span> <span id="other-total">—</span> other</p>
+            <p class="hero-breakdown"><span class="breakdown-stat"><span id="rush-total">—</span> rushing</span><span class="breakdown-stat"><span id="rec-total">—</span> receiving</span><span class="breakdown-stat"><span id="other-total">—</span> other</span></p>
           </div>
           <div class="hero-art-spot"><img class="hero-player-art" src="gibbspic.png" alt="Jahmyr Gibbs with blue and silver paint swirls" width="1312" height="1199" /></div>
         </div>
