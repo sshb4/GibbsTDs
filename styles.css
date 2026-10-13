@@ -90,6 +90,8 @@ td small { display:block; font-size:10px; font-weight:400; color:var(--muted); m
 .error[hidden] { display:none; }
 .site-footer { min-width:0; }
 .td-alerts { display:grid; grid-template-columns:minmax(0,1fr) minmax(0,1fr); gap:36px; background:#dfe9ef; }
+.alerts-heading-row { display:flex; flex-wrap:wrap; align-items:center; gap:10px; }
+.coming-soon-badge { display:inline-block; padding:5px 10px; border:1px solid #96aab7; border-radius:999px; background:var(--accent-soft); color:var(--accent-deep); font-size:10px; font-weight:750; letter-spacing:.08em; text-transform:uppercase; white-space:nowrap; }
 .alerts-copy p { font-size:13px; line-height:1.8; }
 .alerts-copy p:first-of-type { color:var(--accent-deep); font-size:22px; font-weight:750; }
 .sms-form { min-width:0; }
