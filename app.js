@@ -196,7 +196,6 @@ function renderSeason(stats) {
   $('games-played').textContent = fmt(stats.games);
   const metrics = chaseMetrics(stats.total, stats.games);
   $('pace-total').textContent = metrics.projection === null ? '—' : metrics.projection.toFixed(1);
-  $('to-tie').textContent = metrics.tie;
   $('to-break').textContent = metrics.break;
   $('games-remaining').textContent = stats.games === null ? 'Games played unavailable' : `${metrics.remaining} games remaining`;
   $('record-progress').value = Math.min(stats.total, RECORD);
