@@ -1,6 +1,6 @@
 :root {
   color-scheme: light;
-  --bg: #eff3f5;
+  --bg: #d0e3ef;
   --panel-solid: #f8fafb;
   --text: #13212b;
   --muted: #58656e;
@@ -11,7 +11,7 @@
 }
 * { box-sizing: border-box; }
 html { scroll-behavior: smooth; }
-body { margin:0; min-height:100vh; font-family:system-ui,-apple-system,BlinkMacSystemFont,"Segoe UI",sans-serif; color:var(--text); background:radial-gradient(ellipse at top left,#d5e7f2,transparent 45%),var(--bg); line-height:1.45; }
+body { margin:0; min-height:100vh; font-family:system-ui,-apple-system,BlinkMacSystemFont,"Segoe UI",sans-serif; color:var(--text); background:radial-gradient(ellipse at top left,#a8cfee,transparent 55%),radial-gradient(ellipse at bottom right,#b7d8ed,transparent 60%),var(--bg); background-attachment:fixed; line-height:1.45; }
 a { color:inherit; text-underline-offset:3px; }
 button,input { font:inherit; }
 button { cursor:pointer; }
@@ -30,7 +30,7 @@ button:disabled { cursor:default; opacity:.6; }
 .hero-status { display:flex; justify-content:flex-end; align-items:center; gap:10px; color:var(--muted); font-size:11px; min-height:30px; }
 .hero-refresh { width:44px; height:44px; flex-shrink:0; background:transparent; border:0; color:var(--text); font-size:24px; }
 .hero-intro .eyebrow { margin:0 0 8px; }
-.hero-visual { display:grid; grid-template-columns:minmax(0,.9fr) minmax(0,1.2fr); align-items:center; gap:clamp(8px,2vw,24px); padding:4px 0 24px; }
+.hero-visual { display:grid; grid-template-columns:minmax(0,.8fr) minmax(0,1.3fr); align-items:center; gap:clamp(8px,2vw,24px); padding:4px 0 24px; }
 .td-hero { min-width:0; text-align:center; }
 .eyebrow { color:var(--muted); font-size:11px; text-transform:uppercase; letter-spacing:.12em; }
 h1,h2 { font-family:"Bebas Neue",Impact,sans-serif; font-weight:400; }
@@ -44,7 +44,7 @@ h2 { font-size:30px; line-height:1.1; margin:0; }
 .breakdown-stat { white-space:nowrap; }
 .breakdown-stat > span { color:var(--text); font-weight:800; }
 .divider { color:#7c8993; margin:0 6px; }
-.hero-art-spot { min-width:0; width:100%; max-width:500px; justify-self:center; }
+.hero-art-spot { min-width:0; width:100%; max-width:580px; justify-self:center; }
 .hero-player-art { display:block; width:100%; height:auto; }
 .record-context { padding:20px 0 8px; border-top:1px solid var(--line); }
 .record-context > div { display:flex; align-items:baseline; justify-content:space-between; gap:12px; margin-bottom:10px; }
