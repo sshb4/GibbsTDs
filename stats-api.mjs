@@ -36,14 +36,18 @@ export async function statsResponse(request, { fetcher = fetch, cache = null } =
   const key = new Request(new URL(statsPath(upstream), url.origin));
   const cached = await cache?.match(key);
   if (cached) return cached;
+  let stage = 'ESPN fetch';
   try {
     const response = await fetcher(upstream, { signal: AbortSignal.timeout(15000), headers: { Accept: 'application/json' } });
     if (!response.ok) throw new Error(`ESPN HTTP ${response.status}`);
+    stage = 'ESPN JSON parsing';
     const data = await response.json();
     const result = Response.json(data, { headers: { ...cors, 'Cache-Control': 'public, max-age=60' } });
+    stage = 'cache write';
     if (cache) await cache.put(key, result.clone());
     return result;
-  } catch {
+  } catch (error) {
+    console.error('Gibbs stats API failed', { path: url.pathname, stage, upstream, error: error?.message || String(error) });
     return Response.json({ error: 'ESPN data is temporarily unavailable' }, { status: 502, headers: { ...cors, 'Cache-Control': 'no-store' } });
   }
 }

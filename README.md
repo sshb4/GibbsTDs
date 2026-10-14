@@ -2,7 +2,7 @@
 
 He scores. You get a text.
 
-A vanilla JS fan tracker for Jahmyr Gibbs' **2026 regular-season** chase of LaDainian Tomlinson's 31-touchdown record (2006, 16 games). ESPN supplies live data; no API key or frontend build step is required. A small Worker API proxies ESPN to avoid browser CORS restrictions.
+A vanilla JS fan tracker for Jahmyr Gibbs' **2026 regular-season** chase of LaDainian Tomlinson's 31-touchdown record (2006, 16 games). ESPN supplies live data; no API key or frontend build step is required. The browser reads ESPN core stats directly using its CORS support; a small Worker API proxies schedules and boxscores.
 
 The page shows total, rushing, receiving and other TDs; career TDs; a 17-game projection; TDs needed to tie and break the record; the game log; cumulative pace chart; and the NFL scored-touchdown leaderboard. Passing touchdowns and postseason games do not count.
 
@@ -16,7 +16,7 @@ Open http://localhost:8080. Serve over HTTP rather than opening `index.html` dir
 
 ## Data integration
 
-`nfl-data.mjs` contains pure parsers and record calculations. `app.js` fetches the Gibbs stats API; the API fetches ESPN over HTTPS, normalizes `$ref` URLs, retains `lang=en&region=us` on core requests, and refreshes every five minutes while visible. Network requests have a 15-second timeout and boxscore/name lookups use at most four simultaneous requests.
+`nfl-data.mjs` contains pure parsers and record calculations. `app.js` fetches season stats, career stats, leaderboard data, and athlete names directly from ESPN core over HTTPS. These public endpoints allow browser CORS requests but currently reject Cloudflare Worker requests with HTTP 403. Schedules and boxscores use the Gibbs stats API. Requests normalize `$ref` URLs, retain `lang=en&region=us` on core requests, and refresh every five minutes while visible. Network requests have a 15-second timeout and boxscore/name lookups use at most four simultaneous requests.
 
 - Season: `sports.core.api.espn.com/v2/sports/football/leagues/nfl/seasons/2026/types/2/athletes/4429795/statistics`
 - Career: `sports.core.api.espn.com/v2/sports/football/leagues/nfl/athletes/4429795/statistics/0`

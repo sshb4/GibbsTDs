@@ -172,8 +172,12 @@ async function fetchJson(ref, ttl = 0) {
   const timeout = setTimeout(() => controller.abort(), 15000);
   try {
     const base = window.GIBBS_DATA?.apiBaseUrl || window.location.origin;
-    const response = await fetch(new URL(statsPath(url), base), { signal: controller.signal, cache: 'no-store' });
-    if (!response.ok) throw new Error(response.status === 404 ? 'Stats API is not connected; configure the Gibbs Worker' : `Stats API HTTP ${response.status}`);
+    // ESPN core permits browser CORS, but rejects Cloudflare Worker requests.
+    const upstream = new URL(espnUrl(url));
+    const direct = upstream.hostname === 'sports.core.api.espn.com';
+    const target = direct ? upstream : new URL(statsPath(url), base);
+    const response = await fetch(target, { signal: controller.signal, cache: 'no-store' });
+    if (!response.ok) throw new Error(direct ? `ESPN HTTP ${response.status}` : response.status === 404 ? 'Stats API is not connected; configure the Gibbs Worker' : `Stats API HTTP ${response.status}`);
     const data = await response.json();
     cache.set(url, { at: Date.now(), data });
     return data;
