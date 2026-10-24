@@ -22,14 +22,20 @@
       const base = new URL(config.apiBaseUrl);
       if (base.protocol === 'https:') endpoint = new URL('/subscribe', base).href;
     } catch { /* Keep the form closed until the backend is connected. */ }
-    if (!endpoint || !config.turnstileSiteKey) status.textContent = 'Phone signup is not open yet. All stats are available without texts.';
     // Keep the action available so validation explains what is missing.
     // Consent and security verification are still required before any request.
     const updateButton = () => { submit.disabled = busy; };
     const updateChoice = () => {
       input.required = consent.checked;
-      submit.textContent = consent.checked ? 'Get touchdown texts' : 'Continue without texts';
     };
+    document.getElementById('sms-form-skip').addEventListener('click', () => {
+      if (busy) return;
+      form.reset();
+      updateChoice();
+      if (widget !== undefined) window.turnstile.reset(widget);
+      token = '';
+      showResult('You can view all the stats without texts. No signup request was submitted and no phone number was saved.', 'info');
+    });
     consent.addEventListener('change', updateChoice);
     updateChoice();
     updateButton();
@@ -75,18 +81,16 @@
       event.preventDefault();
       if (busy) return;
       if (!consent.checked) {
-        form.reset();
-        updateChoice();
-        showResult('You can view all the stats without texts. No signup request was submitted and no phone number was saved.', 'info');
+        showResult('Check the optional consent box to sign up for alerts, or choose Continue without texts.', 'info');
         return;
       }
       if (!form.reportValidity()) return;
       if (!endpoint || !config.turnstileSiteKey) {
-        status.textContent = 'Phone signup is not open yet. Please check back soon.';
+        status.textContent = 'Signup is temporarily unavailable. Please try again later.';
         return;
       }
       if (!token) {
-        status.textContent = 'Complete the security check below before requesting your text. If it has not loaded, refresh the page and try again.';
+        status.textContent = 'Complete the security check below before saving your signup request. If it has not loaded, refresh the page and try again.';
         document.getElementById('sms-turnstile').scrollIntoView({ block: 'center', behavior: 'smooth' });
         return;
       }
