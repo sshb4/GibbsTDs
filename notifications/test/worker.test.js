@@ -4,7 +4,7 @@ import { DatabaseSync } from 'node:sqlite';
 import { readFileSync, readdirSync } from 'node:fs';
 import { webSignup, normalizeUSPhone } from '../src/signup.js';
 import twilio from 'twilio';
-import { incoming, handleRequest, recordEvents, dispatch, poll } from '../src/worker.js';
+import { incoming, handleRequest, recordEvents, dispatch, poll, smsSegments } from '../src/worker.js';
 import { touchdownEvents } from '../src/touchdowns.js';
 
 function setup() {
@@ -46,6 +46,57 @@ async function join(env, now = Date.now() - 1000, number = phone) {
 const fixture = JSON.parse(readFileSync(new URL('./touchdown.fixture.json', import.meta.url)));
 const occurred = Date.parse(fixture.drives.previous.flatMap(d => d.plays).find(p => p.id === '4018729911237').wallclock);
 const event = { id: 'game:1', occurredAt: Date.now(), body: 'Gibbs TD Chase: HE HIT ONE. Reply STOP to quit.' };
+
+test('SMS segment counts respect GSM extension characters and UTF-16 boundaries', () => {
+  for (const [body, expected] of [
+    ['', 0], ['a'.repeat(160), 1], ['a'.repeat(161), 2],
+    ['a'.repeat(306), 2], ['a'.repeat(307), 3],
+    ['^'.repeat(80), 1], ['^'.repeat(81), 2],
+    ['\f^{}\\[~]|€', 1], ['é'.repeat(160), 1],
+    ['“'.repeat(70), 1], ['“'.repeat(71), 2],
+    ['“'.repeat(134), 2], ['“'.repeat(135), 3],
+    ['🏈'.repeat(35), 1], ['🏈'.repeat(36), 2]
+  ]) assert.equal(smsSegments(body), expected);
+  const body = 'GibbsTDs: TOUCHDOWN #12 vs DAL. gibbstds.com Reply STOP to unsubscribe.';
+  assert.equal(smsSegments(body + ' Help keep these alerts free: https://ko-fi.com/clipboardstats'), 1);
+});
+
+test('every fifth stored event adds the donation nudge and dispatch sends it once', async t => {
+  const env = setup(); env.DONATION_URL = 'https://ko-fi.com/clipboardstats';
+  await join(env, event.occurredAt - 1000);
+  const events = Array.from({ length: 10 }, (_, i) => ({ ...event, id: `nudge:${i + 1}` }));
+  await recordEvents(env, events.slice(0, 5));
+  await recordEvents(env, [events[4]]);
+  await recordEvents(env, events.slice(5));
+  const rows = env.sqlite.prepare('SELECT body FROM events ORDER BY rowid').all();
+  const suffix = ' Help keep these alerts free: ' + env.DONATION_URL;
+  assert.deepEqual(rows.map(r => r.body), events.map((e, i) => e.body + ((i + 1) % 5 === 0 ? suffix : '')));
+  const sent = [];
+  t.mock.method(globalThis, 'fetch', async (_url, options) => {
+    sent.push(options.body.get('Body'));
+    return Response.json({ sid: 'SM' + 'd'.repeat(32) });
+  });
+  await dispatch(env); await dispatch(env);
+  assert.equal(sent.length, 10);
+  assert.equal(sent.filter(body => body.endsWith(suffix)).length, 2);
+});
+
+test('fifth-event nudge is skipped when GSM septets or Unicode exceed one segment', async () => {
+  const suffix = ' Help keep these alerts free: https://ko-fi.com/clipboardstats';
+  for (const body of ['a'.repeat(160 - suffix.length), 'a'.repeat(161 - suffix.length),
+    '^'.repeat(60), '🏈' + 'a'.repeat(20)]) {
+    const env = setup(); env.DONATION_URL = 'https://ko-fi.com/clipboardstats';
+    await recordEvents(env, Array.from({ length: 5 }, (_, i) => ({ ...event, id: `size:${i}`, body })));
+    const stored = env.sqlite.prepare('SELECT body FROM events WHERE id=?').get('size:4').body;
+    assert.equal(stored, smsSegments(body + suffix) === 1 ? body + suffix : body);
+  }
+});
+
+test('real touchdown alert remains GSM-7 and fits the nudge in one segment', () => {
+  const [alert] = touchdownEvents(fixture, occurred - 1000, occurred + 1000, 'https://gibbstouchdowns.com');
+  assert.match(alert.body, /^[\x20-\x7e]+$/);
+  assert.equal(smsSegments(alert.body + ' Help keep these alerts free: https://ko-fi.com/clipboardstats'), 1);
+});
 
 function signedRequest(env, params, path = '/sms') {
   const url = env.PUBLIC_URL + path;

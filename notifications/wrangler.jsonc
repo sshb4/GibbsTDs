@@ -12,6 +12,7 @@
     ]
   },
   "vars": {
+    "DONATION_URL": "https://ko-fi.com/clipboardstats",
     "ALERTS_ENABLED": "false",
     "ALERTS_START_AT": "",
     "MAX_ALERTS_PER_MONTH": "1000",

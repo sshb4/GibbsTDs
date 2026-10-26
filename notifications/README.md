@@ -8,6 +8,8 @@ The scheduled poll runs every two minutes when `ALERTS_ENABLED=true`, checks the
 
 Two touchdowns in one game have separate IDs (`game:play`). Duplicate polls cannot repeat a delivery. Plays before activation, before a subscriber confirmed, older than six hours, from other seasons, or from playoffs are excluded. No historical backlog is sent. Scoring corrections cannot retract a delivered text. Provider and data delays can miss or delay alerts.
 
+Every fifth newly stored event appends ` Help keep these alerts free: https://ko-fi.com/clipboardstats` to the existing alert, using `DONATION_URL` from Worker vars. The nudge is skipped if the combined text exceeds one SMS segment, accounting for GSM-7 extension characters and UTF-16 encoding. Duplicate polls do not advance the cadence or append twice. The cadence uses the total events row count; cleanup retains events. No extra message is sent.
+
 The existing consent and outbox protections remain: website-only affirmative consent, US numbers, Turnstile verification, confirmation via YES within 15 minutes, signed Twilio webhooks, STOP cancellation, START/UNSTOP never silently reenrolling, atomic delivery claims, ambiguous submissions not retried, capacity/budget limits, and retention cleanup while paused. The monthly cap applies to attempted recipient alerts, not confirmations or provider replies. Up to 10 recipients are dispatched per poll.
 
 ## Public stats API
