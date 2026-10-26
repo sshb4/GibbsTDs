@@ -22,7 +22,7 @@ The active entry point is `src/worker.js`; the supplied top-level Worker, detect
 
 1. `SITE_ORIGIN` is configured as `https://gibbstouchdowns.com`, matching the CNAME, canonical URLs, and sitemap. Hosting has not been deployed.
 2. The separate Gibbs Worker and D1 database already exist. Use `gibbs-td-alerts-db`; do not reuse Corbin's subscribers or deployment settings.
-3. Configure a Twilio sender and Messaging Service for the Gibbs program. Set `TWILIO_PHONE_NUMBER` and `SUPPORT_EMAIL` consistently in Worker vars, frontend config, and provider configuration.
+3. Configure a Twilio sender and Messaging Service for the Gibbs program. The configured sender is `+18883132426` in Worker vars and frontend config. Both confirmation and touchdown messages explicitly pass it as `From` alongside `TWILIO_MESSAGING_SERVICE_SID`. Ensure this number belongs to that Messaging Service's sender pool; the Worker does not let Twilio choose another sender. Keep `SUPPORT_EMAIL` consistent in Worker vars, frontend config, and provider configuration.
 4. Create a Turnstile widget for the Gibbs domain; put its site key in `../alerts-config.js` and its secret in Worker secrets.
 
 ```sh

@@ -29,7 +29,7 @@ function setup() {
     } },
     sqlite, MAX_SUBSCRIBERS: '100', MAX_ALERTS_PER_MONTH: '1000',
     TWILIO_ACCOUNT_SID: 'AC' + 'a'.repeat(32), TWILIO_AUTH_TOKEN: 'test-secret',
-    TWILIO_MESSAGING_SERVICE_SID: 'MG' + 'b'.repeat(32), TWILIO_PHONE_NUMBER: '+18005550199',
+    TWILIO_MESSAGING_SERVICE_SID: 'MG' + 'b'.repeat(32), TWILIO_PHONE_NUMBER: '+18883132426',
     PUBLIC_URL: 'https://alerts.example.com', SUPPORT_EMAIL: 'test@example.com'
   };
 }
@@ -190,6 +190,8 @@ test('dispatch sends once; subsequent polls cannot repeat it', async t => {
   let calls = 0;
   t.mock.method(globalThis, 'fetch', async (_url, options) => {
     calls++; assert.equal(options.body.get('To'), phone);
+    assert.equal(options.body.get('From'), '+18883132426');
+    assert.equal(options.body.get('MessagingServiceSid'), env.TWILIO_MESSAGING_SERVICE_SID);
     return Response.json({ sid: 'SM' + 'd'.repeat(32) });
   });
   await dispatch(env); await dispatch(env);
@@ -272,6 +274,7 @@ function mockSignup(t, challenge = {}) {
     assert.ok(url.startsWith('https://api.twilio.com/'));
     calls.texts++;
     assert.match(options.body.get('Body'), /Reply YES/);
+    assert.equal(options.body.get('From'), '+18883132426');
     return Response.json({ sid: 'SM' + 'e'.repeat(32) });
   });
   return calls;
@@ -429,4 +432,13 @@ test('stats-only scheduled deployment needs no database and cannot send SMS', as
   t.mock.method(globalThis, 'fetch', () => assert.fail('must not contact providers'));
   await poll({ ALERTS_ENABLED: 'false' });
   await assert.rejects(() => poll({ ALERTS_ENABLED: 'true' }), /database/);
+});
+
+
+test('SMS signup and dispatch reject a missing sender without contacting providers', async t => {
+  const env = webEnv();
+  delete env.TWILIO_PHONE_NUMBER;
+  t.mock.method(globalThis, 'fetch', () => assert.fail('must not contact providers without a sender'));
+  assert.equal((await webSignup(signupRequest(env), env)).status, 503);
+  await assert.rejects(dispatch(env), /SMS sender is not configured/);
 });

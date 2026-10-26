@@ -20,10 +20,10 @@
     "MAX_WEB_SIGNUPS_PER_DAY": "100",
     "PUBLIC_URL": "https://gibbs-td-alerts.sashacbates.workers.dev",
     "SIGNUPS_ENABLED": "true",
-    "SIGNUP_MODE": "waitlist",
+    "SIGNUP_MODE": "sms",
     "SITE_ORIGIN": "https://gibbstouchdowns.com",
     "SUPPORT_EMAIL": "sashacbates@gmail.com",
-    "TWILIO_PHONE_NUMBER": ""
+    "TWILIO_PHONE_NUMBER": "+18883132426"
   },
   "d1_databases": [
     {

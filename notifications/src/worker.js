@@ -143,6 +143,7 @@ export async function recordEvents(env, events) {
 }
 
 export async function dispatch(env, now = Date.now()) {
+  if (!env.TWILIO_PHONE_NUMBER) throw new Error('SMS sender is not configured');
   const month = new Date(now).toISOString().slice(0, 7);
   await db(env, 'INSERT OR IGNORE INTO monthly_usage(month) VALUES(?)', month).run();
   await db(env, `UPDATE deliveries SET state='expired' WHERE state='pending'
@@ -163,7 +164,7 @@ export async function dispatch(env, now = Date.now()) {
       const response = await fetch(`https://api.twilio.com/2010-04-01/Accounts/${env.TWILIO_ACCOUNT_SID}/Messages.json`, {
         method: 'POST', signal: AbortSignal.timeout(15_000),
         headers: { Authorization: `Basic ${btoa(`${env.TWILIO_ACCOUNT_SID}:${env.TWILIO_AUTH_TOKEN}`)}`, 'Content-Type': 'application/x-www-form-urlencoded' },
-        body: new URLSearchParams({ To: item.phone, MessagingServiceSid: env.TWILIO_MESSAGING_SERVICE_SID,
+        body: new URLSearchParams({ To: item.phone, From: env.TWILIO_PHONE_NUMBER, MessagingServiceSid: env.TWILIO_MESSAGING_SERVICE_SID,
           Body: item.body, StatusCallback: `${env.PUBLIC_URL.replace(/\/$/, '')}/status?id=${item.id}` })
       });
       const result = await response.json();
@@ -196,7 +197,7 @@ export async function poll(env, now = Date.now()) {
   await cleanup(env, now);
   const startAt = Date.parse(env.ALERTS_START_AT);
   if (env.ALERTS_ENABLED !== 'true') return;
-  if (!Number.isFinite(startAt) || !env.PUBLIC_URL || !env.TWILIO_ACCOUNT_SID || !env.TWILIO_AUTH_TOKEN || !env.TWILIO_MESSAGING_SERVICE_SID) throw new Error('Alert setup incomplete');
+  if (!Number.isFinite(startAt) || !env.PUBLIC_URL || !env.TWILIO_ACCOUNT_SID || !env.TWILIO_AUTH_TOKEN || !env.TWILIO_MESSAGING_SERVICE_SID || !env.TWILIO_PHONE_NUMBER) throw new Error('Alert setup incomplete');
   try {
     const schedule = await fetchJson(`https://site.api.espn.com/apis/site/v2/sports/football/nfl/teams/${TEAM_ID}/schedule?season=${SEASON}&seasontype=2`);
     if (Number(schedule.season?.year) !== SEASON || Number(schedule.season?.type) !== 2) throw new Error('Unexpected ESPN season');

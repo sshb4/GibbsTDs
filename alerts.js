@@ -28,14 +28,6 @@
     const updateChoice = () => {
       input.required = consent.checked;
     };
-    document.getElementById('sms-form-skip').addEventListener('click', () => {
-      if (busy) return;
-      form.reset();
-      updateChoice();
-      if (widget !== undefined) window.turnstile.reset(widget);
-      token = '';
-      showResult('You can view all the stats without texts. No signup request was submitted and no phone number was saved.', 'info');
-    });
     consent.addEventListener('change', updateChoice);
     updateChoice();
     updateButton();
@@ -81,7 +73,7 @@
       event.preventDefault();
       if (busy) return;
       if (!consent.checked) {
-        showResult('Check the optional consent box to sign up for alerts, or choose Continue without texts.', 'info');
+        showResult('Check the optional consent box to sign up for alerts.', 'info');
         return;
       }
       if (!form.reportValidity()) return;

@@ -36,7 +36,7 @@ export async function webSignup(request, env, now = Date.now()) {
   if (request.method !== 'POST') return reply(405, 'Use the signup form to subscribe.');
   const waitlist = env.SIGNUP_MODE === 'waitlist';
   if (env.SIGNUPS_ENABLED !== 'true' || !env.TURNSTILE_SECRET_KEY || !env.SUPPORT_EMAIL ||
-      (!waitlist && (!env.TWILIO_AUTH_TOKEN || !env.TWILIO_ACCOUNT_SID || !env.TWILIO_MESSAGING_SERVICE_SID))) {
+      (!waitlist && (!env.TWILIO_AUTH_TOKEN || !env.TWILIO_ACCOUNT_SID || !env.TWILIO_MESSAGING_SERVICE_SID || !env.TWILIO_PHONE_NUMBER))) {
     return reply(503, 'Phone signup is not open yet. Please check back soon.');
   }
   if (!request.headers.get('Content-Type')?.startsWith('application/json')) return reply(415, 'Invalid form submission.');
@@ -107,7 +107,7 @@ export async function webSignup(request, env, now = Date.now()) {
       const response = await fetch(`https://api.twilio.com/2010-04-01/Accounts/${env.TWILIO_ACCOUNT_SID}/Messages.json`, {
         method: 'POST', signal: AbortSignal.timeout(15_000),
         headers: { Authorization: `Basic ${btoa(`${env.TWILIO_ACCOUNT_SID}:${env.TWILIO_AUTH_TOKEN}`)}`, 'Content-Type': 'application/x-www-form-urlencoded' },
-        body: new URLSearchParams({ To: phone, MessagingServiceSid: env.TWILIO_MESSAGING_SERVICE_SID, Body: SIGNUP_PROMPT.replace('{terms}', `${env.SITE_ORIGIN}/sms-terms.html`) })
+        body: new URLSearchParams({ To: phone, From: env.TWILIO_PHONE_NUMBER, MessagingServiceSid: env.TWILIO_MESSAGING_SERVICE_SID, Body: SIGNUP_PROMPT.replace('{terms}', `${env.SITE_ORIGIN}/sms-terms.html`) })
       });
       const result = await response.json();
       if (!response.ok) {
