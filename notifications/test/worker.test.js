@@ -6,6 +6,14 @@ import { webSignup, normalizeUSPhone } from '../src/signup.js';
 import twilio from 'twilio';
 import { incoming, handleRequest, recordEvents, dispatch, poll, smsSegments } from '../src/worker.js';
 import { touchdownEvents } from '../src/touchdowns.js';
+import { SIGNUP_PROMPT } from '../src/messages.js';
+
+test('signup confirmation with the production terms link fits in one SMS segment', () => {
+  const text = SIGNUP_PROMPT.replace('{terms}', 'https://gibbstouchdowns.com/sms-terms.html');
+  assert.equal(smsSegments(text), 1);
+  assert.match(text, /^Gibbs TD Chase: Reply YES for touchdown alerts\./);
+  assert.match(text, /Terms: https:\/\/gibbstouchdowns.com\/sms-terms\.html$/);
+});
 
 function setup() {
   const sqlite = new DatabaseSync(':memory:');
