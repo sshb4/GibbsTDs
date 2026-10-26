@@ -100,7 +100,9 @@ td small { display:block; font-size:10px; font-weight:400; color:var(--muted); m
 .sms-form-row { display:flex; gap:8px; }
 .sms-form-row input { width:100%; min-width:0; border:1px solid #96aab7; border-radius:6px; padding:11px; background:white; }
 .sms-button { border:0; border-radius:6px; background:var(--accent-deep); color:white; padding:11px 16px; font-size:12px; min-width:130px; }
+.sms-button:disabled { opacity:.5; cursor:not-allowed; }
 .sms-form-status,.sms-disclosure { font-size:11px; line-height:1.8; color:var(--muted); }
+.sms-form-status[data-state="success"] { padding:12px 14px; border:1px solid #448260; border-radius:6px; background:#edf8f0; color:#205332; font-size:13px; font-weight:600; }
 .sms-form-status[data-state="error"] { color:#8b2c20; }
 .sms-consent { display:flex!important; align-items:start; gap:8px; font-size:11px!important; line-height:1.8; }
 .sms-consent input { margin-top:4px; flex-shrink:0; }

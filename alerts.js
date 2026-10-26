@@ -22,17 +22,32 @@
       const base = new URL(config.apiBaseUrl);
       if (base.protocol === 'https:') endpoint = new URL('/subscribe', base).href;
     } catch { /* Keep the form closed until the backend is connected. */ }
-    // Keep the action available so validation explains what is missing.
-    // Consent and security verification are still required before any request.
-    const updateButton = () => { submit.disabled = busy; };
+    const phoneReady = () => /^[+\d\s().-]+$/.test(input.value) && /^1?\d{10}$/.test(input.value.replace(/\D/g, ''));
+    const updateButton = () => {
+      submit.disabled = busy || !consent.checked || !phoneReady() || !token || !endpoint || !config.turnstileSiteKey;
+      submit.textContent = busy ? 'Submitting…' : 'Sign up for alerts';
+      input.disabled = consent.disabled = busy;
+      if (busy || status.dataset.state) return;
+      status.textContent = !endpoint || !config.turnstileSiteKey
+        ? 'Signup is temporarily unavailable. Please try again later.'
+        : !phoneReady() ? 'Enter your US phone number to get started.'
+        : !consent.checked ? 'Check the consent box to sign up for texts.'
+        : !token ? 'Complete the security check to sign up.'
+        : 'Ready! Sign up to receive your confirmation text.';
+    };
     const updateChoice = () => {
       input.required = consent.checked;
+      updateButton();
     };
-    consent.addEventListener('change', updateChoice);
+    const editSignup = () => {
+      delete status.dataset.state;
+      updateChoice();
+    };
+    consent.addEventListener('change', editSignup);
+    input.addEventListener('input', editSignup);
     updateChoice();
     updateButton();
     if (endpoint && config.turnstileSiteKey) {
-      status.textContent = 'Complete the security check, then submit your signup request.';
       window.onGibbsTurnstileReady = () => {
         const container = document.getElementById('sms-turnstile');
         let widgetSize;
@@ -77,6 +92,10 @@
         return;
       }
       if (!form.reportValidity()) return;
+      if (!phoneReady()) {
+        showResult('Enter a valid US phone number.', 'error');
+        return;
+      }
       if (!endpoint || !config.turnstileSiteKey) {
         status.textContent = 'Signup is temporarily unavailable. Please try again later.';
         return;
@@ -97,8 +116,9 @@
           signal: AbortSignal.timeout(30_000)
         });
         const result = await response.json();
-        showResult(result.message || 'Something went wrong. Please try again later.', response.ok && result.message ? 'success' : 'error');
-        if (response.ok) { form.reset(); updateChoice(); }
+        const success = response.ok && typeof result.message === 'string' && result.message.trim();
+        showResult(success ? `Thanks for submitting! ${result.message}` : result.message || 'Something went wrong. Please try again later.', success ? 'success' : 'error');
+        if (success) { form.reset(); updateChoice(); }
       } catch {
         showResult('We could not confirm whether your request was saved. Please try again later.', 'error');
       } finally {
